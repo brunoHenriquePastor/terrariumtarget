@@ -1,4 +1,0 @@
-flask-shell-ipython
-pytest
-pytest-flask
-pytest-cov
