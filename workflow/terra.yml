@@ -1,0 +1,168 @@
+name: Pipeline CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+        shell: bash
+        RUNNER_ARCH : ARM
+
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+#
+    - if: github.event_name == 'pull_request'
+      name: Generate build number
+      id: buildnumber
+      uses: einaregilsson/build-number@v3 
+      with:
+        token: ${{secrets.github_token}}    
+   
+    - name: Check Out Repo 
+      if: github.event_name == 'pull_request'
+      uses: actions/checkout@v2
+
+    - name: Login to Docker Hub
+      if: github.event_name == 'pull_request'
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Set up Docker Python
+      if: github.event_name == 'pull_request'
+      id: python
+      uses: docker/setup-python-action@v1
+
+    - name: Build and push
+      if: github.event_name == 'pull_request'
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        context: ./app
+        file: ./app/Dockerfile
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app1:${{ steps.buildnumber.outputs.build_number }}
+
+
+  test:
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
+    - name: Analysing the code with doctest
+      run: |
+        - python -m doctest -v test/test_with_doctest.py 
+
+
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+    - name: Build package
+      run: python -m build
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# stages:
+#   - build
+#   - test
+#   - delivery
+
+# variables:
+#   IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+
+# build:
+#   image: docker:latest 
+#   services:
+#     - docker:dind
+#   stage: build
+
+
+#     # steps:
+#     # - uses: actions/checkout@v3
+#     # - name: Build the Docker image
+#     #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+#   script:
+#       - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
+#       - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 -t $IMAGE_NAME .
+#   tags:
+#     - docker
+
+
+# test:
+#   image: $IMAGE_NAME
+#   stage: test
+#   script:
+#       - python -m doctest -v test/test_with_doctest.py 
+#   tags:
+#     - docker  
+
+# delivery:
+#   image: docker
+#   stage: delivery
+#   services:
+#      - name: docker:dind
+#   script:
+#     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD 
+#     - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 -t $CI_REGISTRY_IMAGE . #--platform linux/arm32v7
+#     - docker push $CI_REGISTRY_IMAGE
+
