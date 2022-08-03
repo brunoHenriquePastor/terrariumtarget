@@ -11,7 +11,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container: arm32v7/python:3
+    container: 
+      image: arm32v7/python:3
+      env:
+        NODE_ENV: arduinoEnv
+
+
     defaults:
       run:
         working-directory: app
@@ -68,7 +73,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: [build]
-    container: my-image-name:$(date +%s)
+    container: 
+      image: my-image-name:$("terrarium_target")
+      env:
+        NODE_ENV: arduinoEnv
+
     defaults:
       run:
         working-directory: app
@@ -76,6 +85,8 @@ jobs:
     
     env:
         RUNNER_ARCH : ARM
+
+
 
 
 
@@ -105,6 +116,20 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: [test]
+    container: 
+      image: my-image-name:$("terrarium_target")
+      env:
+        NODE_ENV: arduinoEnv
+
+    defaults:
+      run:
+        working-directory: app
+        shell: bash
+    
+    env:
+        RUNNER_ARCH : ARM
+
+
 
     steps:
     - uses: actions/checkout@v3
