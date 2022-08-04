@@ -10,7 +10,7 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, ARM]
     container: 
       image: arm32v7/python:3
       env:
@@ -71,7 +71,7 @@ jobs:
 
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, ARM]
     needs: [build]
     container: 
       image: my-image-name:$("terrarium_target")
@@ -114,7 +114,7 @@ jobs:
 
   delivery:
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, ARM]
     needs: [test]
     container: 
       image: my-image-name:$("terrarium_target")
