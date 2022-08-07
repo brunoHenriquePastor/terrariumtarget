@@ -10,7 +10,7 @@ jobs:
 
   build:
 
-    runs-on: [self-hosted, linux, ARM]
+    runs-on: ubuntu-latest
     container: 
       image: arm32v7/python:3
       env:
@@ -39,10 +39,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$("terrarium_target")
 #   
-   
-    - name: Check Out Repo 
-      if: github.event_name == 'pull_request'
-      uses: actions/checkout@v2
 
 
     - name: Setup Python
@@ -114,33 +110,34 @@ jobs:
 
   delivery:
 
-    runs-on: [self-hosted, linux, ARM]
+    runs-on: ubuntu-latest
+     #[self-hosted, linux, ARM]
     needs: [test]
-    container: 
-      image: my-image-name:$("terrarium_target")
-      env:
-        NODE_ENV: arduinoEnv
+    # container: 
+    #   image: my-image-name:$("terrarium_target")
+    #   env:
+    #     NODE_ENV: arduinoEnv
 
-    defaults:
-      run:
-        working-directory: app
-        shell: bash
+    # defaults:
+    #   run:
+    #     working-directory: app
+    #     shell: bash
     
-    env:
-        RUNNER_ARCH : ARM
+    # env:
+    #     RUNNER_ARCH : ARM
 
 
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build
+    # - uses: actions/checkout@v3
+    # - name: Set up Python
+    #   uses: actions/setup-python@v3
+    #   with:
+    #     python-version: '3.x'
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install build
     - name: Build package
       run: python -m build
     - name: Publish package
