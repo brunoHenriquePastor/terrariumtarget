@@ -22,8 +22,8 @@ jobs:
     #     working-directory: app
     #     shell: bash
     
-    env:
-       RUNNER_ARCH : ARM
+    # env:
+    #    RUNNER_ARCH : ARM
 
 
     steps:
