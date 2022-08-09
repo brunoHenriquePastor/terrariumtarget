@@ -70,7 +70,7 @@ jobs:
 
   test:
     runs-on: [self-hosted, linux, ARM]
-    needs: [build]
+    #needs: [build]
     container: 
       image: my-image-name:$("terrarium_target")
       env:
@@ -114,7 +114,7 @@ jobs:
 
     runs-on: [self-hosted, linux, ARM]
      #[self-hosted, linux, ARM]
-    needs: [test]
+    #needs: [test]
     # container: 
     #   image: my-image-name:$("terrarium_target")
     #   env:
