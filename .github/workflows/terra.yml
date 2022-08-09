@@ -10,7 +10,7 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, ARM]
     container: 
       image: arm32v7/python:3
       env:
@@ -110,7 +110,7 @@ jobs:
 
   delivery:
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, ARM]
      #[self-hosted, linux, ARM]
     needs: [test]
     # container: 
