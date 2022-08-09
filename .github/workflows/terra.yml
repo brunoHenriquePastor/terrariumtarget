@@ -39,7 +39,7 @@ jobs:
     - name: Build the Docker image
       run: |
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker image build -t bhpdocker/terrarium_target:latest .
+        Docker image build -t bhpdocker/terrarium_target:latest .
 #   
 
 
@@ -70,9 +70,9 @@ jobs:
 
   test:
     runs-on: [self-hosted, linux, ARM]
-    #needs: [build]
+    needs: [build]
     container: 
-      image: my-image-name:$("terrarium_target")
+      image: bhpdocker/terrarium_target:latest
       env:
         NODE_ENV: arduinoEnv
 
@@ -114,9 +114,9 @@ jobs:
 
     runs-on: [self-hosted, linux, ARM]
      #[self-hosted, linux, ARM]
-    #needs: [test]
-    # container: 
-    #   image: my-image-name:$("terrarium_target")
+    needs: [test]
+    container: 
+       image: bhpdocker/terrarium_target:latest
     #   env:
     #     NODE_ENV: arduinoEnv
 
