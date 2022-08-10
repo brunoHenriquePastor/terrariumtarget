@@ -31,6 +31,24 @@ jobs:
     - name: check out code
       uses: actions/checkout@v2
 
+    - name: Build Docker Image
+      uses: docker/build-push-action@v1
+      with:
+        repository: my-example-image
+        tags: latest
+    - uses: boostchicken-dev/actions-docker-extract@v2
+      id: extract
+      with:
+        image: my-example-image
+        path: /app/.
+    - name: Upload Dist
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ steps.extract.outputs.destination }}
+        name: dist
+
+
+
     # - name: Login to Docker Hub
     #   #if: github.event_name == 'pull_request'
     #   uses: docker/login-action@v1
@@ -39,11 +57,11 @@ jobs:
     #     password: ${{ secrets.DOCKER_PASSWORD }}
 
     #- uses: docker/build-push-action@v2
-    - name: Build the Docker image
-      run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker image build -t bhpdocker/terrarium_target:latest .
-#   
+#     - name: Build the Docker image
+#       run: |
+#         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+#         docker image build -t bhpdocker/terrarium_target:latest .
+# #   
 
 
     # - name: Setup Python
