@@ -10,9 +10,9 @@ jobs:
 
   build:
 
-    runs-on: [self-hosted, linux, ARM]
+    runs-on: [self-hosted, linux, ARM64]
     container: 
-      image: arm32v7/python:3
+      image: arm64v8/python
       env:
         NODE_ENV: arduinoEnv
 
@@ -94,16 +94,16 @@ jobs:
     needs: [build]
     container: 
       image: bhpdocker/terrarium_target:latest
-      env:
-        NODE_ENV: arduinoEnv
+      # env:
+      #   NODE_ENV: arduinoEnv
 
-    defaults:
-      run:
-        working-directory: app
-        shell: bash
+    # defaults:
+    #   run:
+    #     working-directory: app
+    #     shell: bash
     
-    env:
-        RUNNER_ARCH : ARM
+    # env:
+    #     RUNNER_ARCH : ARM
 
 
 
