@@ -6,46 +6,33 @@ on:
   pull_request:
     branches: [ "main" ]
 
-jobs:
 
+jobs:
   build:
 
-    runs-on: [self-hosted, linux, ARM64]
+    runs-on: ubuntu-18.04 
+    env:      
+      DOCKER_REGISTRY: brunohenriquep180@gmail.com      
+      DOCKER_IMAGE: bhpdocker/terrarium_target:tagname      
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+      DOCKER_TARGET_PLATFORM: linux/arm/v8
     container: 
       image: arm64v8/python
   
 
-
-    # defaults:
-    #   run:
-    #     working-directory: app
-    #     shell: bash
-    
-    # env:
-    #    RUNNER_ARCH : ARM
-
-
     steps:
 
-    # - name: check out code
-    #   uses: actions/checkout@v2
+    - name: check out code
+      uses: actions/checkout@v1
 
-    # - name: Build Docker Image
-    #   uses: docker/build-push-action@v1
-    #   with:
-    #     repository: my-example-image
-    #     tags: latest
-    # - uses: boostchicken-dev/actions-docker-extract@v2
-    #   id: extract
-    #   with:
-    #     image: my-example-image
-    #     path: /app/.
-    # - name: Upload Dist
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     path: ${{ steps.extract.outputs.destination }}
-    #     name: dist
+    - name: Set up Docker Buildx      
+      uses: crazy-max/ghaction-docker-buildx@v1      
+      with:        
+        version: latest
 
+
+    #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
 
 
     - name: Login to Docker Hub
@@ -59,7 +46,27 @@ jobs:
       run: |
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         docker image build -t bhpdocker/terrarium_target:latest .
-#   
+    
+    - name: Prepare      
+      if: success()      
+      id: prepare      
+      run: |        
+        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}        
+        echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}        
+        echo ::set-output name=version::${GITHUB_RUN_NUMBER}   
+
+    - name: Docker Login      
+      if: success()      
+      run: |        
+        echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin
+    - name: Run Buildx (push image)      
+      if: success()      
+      run: |        
+          docker buildx build \        
+          --platform ${{ steps.prepare.outputs.docker_platform }} \             
+          --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} \        
+          --file ./Dockerfile \        
+          --output type=image,push=true .
 
 
     # - name: Setup Python
@@ -87,94 +94,64 @@ jobs:
     #     tags: ${{ secrets.DOCKER_USERNAME }}/app:${{ steps.buildnumber.outputs.build_number }}
 
 
-  test:
-    runs-on: [self-hosted, linux, ARM64]
-    needs: [build]
-    container: 
-      image: bhpdocker/terrarium_target:latest
-      # env:
-      #   NODE_ENV: arduinoEnv
+  # test:
+  #   runs-on: [self-hosted, linux, ARM64]
+  #   needs: [build]
+  #   container: 
+  #     image: bhpdocker/terrarium_target:latest
 
-    # defaults:
-    #   run:
-    #     working-directory: app
-    #     shell: bash
+
+
+  #   strategy:
+  #     matrix:
+  #       python-version: ["3.8", "3.9", "3.10"]
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Set up Python ${{ matrix.python-version }}
+  #     uses: actions/setup-python@v3
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #   - name: Install dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install pylint
+  #   - name: Analysing the code with pylint
+  #     run: |
+  #       pylint $(git ls-files '*.py')
+  #   - name: Analysing the code with doctest
+  #     run: |
+  #       - python -m doctest -v test/test_with_doctest.py 
+
+
+
+  # delivery:
+
+  #   runs-on: [self-hosted, linux, ARM64]
+  #   needs: [test]
+  #   container: 
+  #      image: bhpdocker/terrarium_target:latest
+  #   #   env:
+  #   #     NODE_ENV: arduinoEnv
+
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: app
+  #   #     shell: bash
     
-    # env:
-    #     RUNNER_ARCH : ARM
+  #   # env:
+  #   #     RUNNER_ARCH : ARM
 
 
 
-
-
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint
-    - name: Analysing the code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
-    - name: Analysing the code with doctest
-      run: |
-        - python -m doctest -v test/test_with_doctest.py 
-
-
-
-  delivery:
-
-    runs-on: [self-hosted, linux, ARM64]
-     #[self-hosted, linux, ARM]
-    needs: [test]
-    container: 
-       image: bhpdocker/terrarium_target:latest
-    #   env:
-    #     NODE_ENV: arduinoEnv
-
-    # defaults:
-    #   run:
-    #     working-directory: app
-    #     shell: bash
+  #   steps:
     
-    # env:
-    #     RUNNER_ARCH : ARM
-
-
-
-    steps:
-    # - uses: actions/checkout@v3
-    # - name: Set up Python
-    #   uses: actions/setup-python@v3
-    #   with:
-    #     python-version: '3.x'
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install build
-    - name: Build package
-      run: python -m build
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-
-
-
-
-
-
-
-
+  #   - name: Build package
+  #     run: python -m build
+  #   - name: Publish package
+  #     uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+  #     with:
+  #       username: ${{ secrets.DOCKER_USERNAME }}
+  #       password: ${{ secrets.DOCKER_PASSWORD }}
 
 
 
