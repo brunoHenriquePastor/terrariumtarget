@@ -18,7 +18,7 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
       DOCKER_TARGET_PLATFORM: linux/arm/v7
     container: 
-      image: arm64v8/python
+      image: arm32v7/python
   
 
     steps:
