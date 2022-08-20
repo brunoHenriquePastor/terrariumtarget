@@ -16,7 +16,7 @@ jobs:
       DOCKER_IMAGE: bhpdocker/terrarium_target:tagname      
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
-      DOCKER_TARGET_PLATFORM: linux/arm/v8
+      DOCKER_TARGET_PLATFORM: linux/arm/v7
     container: 
       image: arm64v8/python
   
