@@ -91,7 +91,7 @@ jobs:
     #     pylint $(git ls-files '*.py')
     - name: Analysing the code with doctest
       run: |
-        - python -m doctest -v test/test_with_doctest.py 
+        python -m doctest -v test/test_with_doctest.py 
 
 
 
