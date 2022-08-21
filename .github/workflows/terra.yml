@@ -72,11 +72,13 @@ jobs:
     #     tags: ${{ env.DOCKER_IMAGE }}
 
 
-  test:
-    runs-on: ubuntu-18.04 
+  # test:
+  #   runs-on: ubuntu-18.04 
 
-    needs: [build]
-    steps:
+  #   needs: [build]
+
+
+  #   steps:
     
 
     - name: Install dependencies
