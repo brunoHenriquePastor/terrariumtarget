@@ -146,7 +146,7 @@ jobs:
     runs-on: ubuntu-18.04 
     needs: [build]
     container: 
-      image: ${env.DOCKER_IMAGE}
+      image: ${{ env.DOCKER_IMAGE }}
 
 
     strategy:
