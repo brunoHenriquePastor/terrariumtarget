@@ -50,11 +50,11 @@ jobs:
       with:
         context: .
         load: true
-        tags: ${{ DOCKER_IMAGE }}
+        tags: ${{ env.DOCKER_IMAGE }}
     -
       name: Test
       run: |
-        docker run --rm ${{ DOCKER_IMAGE }}
+        docker run --rm ${{ env.DOCKER_IMAGE }}
     -
       name: Build and push
       uses: docker/build-push-action@v3
@@ -62,7 +62,7 @@ jobs:
         context: .
         platforms: linux/amd64,linux/arm64,linux/arm/v7
         push: true
-        tags: ${{ DOCKER_IMAGE }}
+        tags: ${{ env.DOCKER_IMAGE }}
 
 
     #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
