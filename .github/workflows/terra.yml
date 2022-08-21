@@ -72,6 +72,15 @@ jobs:
     #     tags: ${{ env.DOCKER_IMAGE }}
 
 
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
+    - name: Analysing the code with doctest
+      run: |
+        - python -m doctest -v test/test_with_doctest.py 
+
+
+
 
 
 
@@ -142,28 +151,41 @@ jobs:
     #     tags: ${{ secrets.DOCKER_USERNAME }}/app:${{ steps.buildnumber.outputs.build_number }}
 
 
-  test:
-    runs-on: ubuntu-18.04 
-    env:          
-          DOCKER_IMAGE: bhpdocker/terrarium_target:tagname   
-
-    needs: [build]
-    container: 
-      image: bhpdocker/terrarium_target:tagname
 
 
-    strategy:
-      matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-    steps:
 
 
-    - name: Analysing the code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
-    - name: Analysing the code with doctest
-      run: |
-        - python -m doctest -v test/test_with_doctest.py 
+
+
+  # test:
+  #   runs-on: ubuntu-18.04 
+  #   env:          
+  #         DOCKER_IMAGE: bhpdocker/terrarium_target:tagname   
+
+  #   needs: [build]
+  #   container: 
+  #     image: bhpdocker/terrarium_target:tagname
+
+
+  #   strategy:
+  #     matrix:
+  #       python-version: ["3.8", "3.9", "3.10"]
+  #   steps:
+
+
+  #   - name: Analysing the code with pylint
+  #     run: |
+  #       pylint $(git ls-files '*.py')
+  #   - name: Analysing the code with doctest
+  #     run: |
+  #       - python -m doctest -v test/test_with_doctest.py 
+
+
+
+
+
+
+
 
 
 
