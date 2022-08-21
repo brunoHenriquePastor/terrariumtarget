@@ -3,10 +3,10 @@ import random
 from datetime import date
 import sys
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget')
-import src.Atomic_Terrarium as AT
 import doctest
 import re
 import uuid
+import src.Atomic_Terrarium as AT
 
 
 aleatorio = 10*random.random()
