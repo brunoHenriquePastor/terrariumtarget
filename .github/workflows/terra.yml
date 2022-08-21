@@ -37,11 +37,32 @@ jobs:
     - name: login to docker hub
       run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: build the image
+    # - name: build the image
+    #   run: |
+    #     docker buildx build \
+    #       --tag ${DOCKER_IMAGE} \
+    #       --platform linux/arm64  .
+
+
+    -
+      name: Build and export to Docker
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        load: true
+        tags: ${{ DOCKER_IMAGE }}
+    -
+      name: Test
       run: |
-        docker buildx build \
-          --tag ${DOCKER_IMAGE} \
-          --platform linux/arm64  .
+        docker run --rm ${{ DOCKER_IMAGE }}
+    -
+      name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64,linux/arm/v7
+        push: true
+        tags: ${{ DOCKER_IMAGE }}
 
 
     #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
