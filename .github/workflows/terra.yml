@@ -72,6 +72,11 @@ jobs:
     #     tags: ${{ env.DOCKER_IMAGE }}
 
 
+  test:
+    runs-on: ubuntu-18.04 
+    
+    steps:
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
