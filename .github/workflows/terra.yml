@@ -12,13 +12,13 @@ jobs:
 
     runs-on: ubuntu-18.04 
     env:      
-      DOCKER_REGISTRY: brunohenriquep180@gmail.com      
-      DOCKER_IMAGE: bhpdocker/terrarium_target:tagname      
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
-      DOCKER_TARGET_PLATFORM: linux/arm/v7
-    container: 
-      image: arm32v7/python
+    #   DOCKER_REGISTRY: brunohenriquep180@gmail.com      
+       DOCKER_IMAGE: bhpdocker/terrarium_target:tagname      
+    #   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    #   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
+    #   DOCKER_TARGET_PLATFORM: linux/arm/v8
+    # container: 
+    #   image: arm64v8/python
   
 
     steps:
@@ -26,47 +26,61 @@ jobs:
     - name: check out code
       uses: actions/checkout@v1
 
+    - name: install buildx
+      id: buildx
+      uses: crazy-max/ghaction-docker-buildx@v1
+      with:
+        version: latest
+
     - name: Set up Docker Buildx      
       uses: crazy-max/ghaction-docker-buildx@v1      
       with:        
         version: latest
 
+    - name: build the image
+      run: |
+        docker buildx build \
+          --tag ${DOCKER_IMAGE} \
+          --platform linux/amd64,linux/arm/v7,linux/arm64  .
+
 
     #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
 
 
-    - name: Login to Docker Hub
-      uses: docker/build-push-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
+    # - name: Login to Docker Hub
+    #   uses: docker/build-push-action@v1
+    #   with:
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_TOKEN }}
 
-    - uses: docker/build-push-action@v2
-    - name: Build the Docker image
-      run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker image build -t bhpdocker/terrarium_target:latest .
+    # - uses: docker/build-push-action@v2
+    # - name: Build the Docker image
+    #   run: |
+    #     echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    #     docker image build -t bhpdocker/terrarium_target:latest .
     
-    - name: Prepare      
-      if: success()      
-      id: prepare      
-      run: |        
-        echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}        
-        echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}        
-        echo ::set-output name=version::${GITHUB_RUN_NUMBER}   
+    # - name: Prepare      
+    #   if: success()      
+    #   id: prepare      
+    #   run: |        
+    #     echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}        
+    #     echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}        
+    #     echo ::set-output name=version::${GITHUB_RUN_NUMBER}   
 
-    - name: Docker Login      
-      if: success()      
-      run: |        
-        echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin
-    - name: Run Buildx (push image)      
-      if: success()      
-      run: |        
-          docker buildx build \        
-          --platform ${{ steps.prepare.outputs.docker_platform }} \             
-          --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} \        
-          --file ./Dockerfile \        
-          --output type=image,push=true .
+    # - name: Docker Login      
+    #   if: success()      
+    #   run: |        
+    #     echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin
+    # - name: Run Buildx (push image)      
+    #   if: success()      
+    #   run: |        
+    #       docker buildx build \        
+    #       --platform ${{ steps.prepare.outputs.docker_platform }} \             
+    #       --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} \        
+    #       --file ./Dockerfile \        
+    #       --output type=image,push=true .
+
+
 
 
     # - name: Setup Python
