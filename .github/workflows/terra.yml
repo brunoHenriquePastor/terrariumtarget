@@ -144,6 +144,9 @@ jobs:
 
   test:
     runs-on: ubuntu-18.04 
+    env:          
+          DOCKER_IMAGE: bhpdocker/terrarium_target:tagname   
+
     needs: [build]
     container: 
       image: ${{ env.DOCKER_IMAGE }}
