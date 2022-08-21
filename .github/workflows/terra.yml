@@ -108,18 +108,28 @@ jobs:
     #     tags: ${{ secrets.DOCKER_USERNAME }}/app:${{ steps.buildnumber.outputs.build_number }}
 
 
-  # test:
-  #   runs-on: [self-hosted, linux, ARM64]
-  #   needs: [build]
-  #   container: 
-  #     image: bhpdocker/terrarium_target:latest
+  test:
+    runs-on: ubuntu-18.04 
+    needs: [build]
+    container: 
+      image: bhpdocker/terrarium_target:latest
+
+
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+
+
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
+    - name: Analysing the code with doctest
+      run: |
+        - python -m doctest -v test/test_with_doctest.py 
 
 
 
-  #   strategy:
-  #     matrix:
-  #       python-version: ["3.8", "3.9", "3.10"]
-  #   steps:
   #   - uses: actions/checkout@v3
   #   - name: Set up Python ${{ matrix.python-version }}
   #     uses: actions/setup-python@v3
@@ -129,12 +139,7 @@ jobs:
   #     run: |
   #       python -m pip install --upgrade pip
   #       pip install pylint
-  #   - name: Analysing the code with pylint
-  #     run: |
-  #       pylint $(git ls-files '*.py')
-  #   - name: Analysing the code with doctest
-  #     run: |
-  #       - python -m doctest -v test/test_with_doctest.py 
+  
 
 
 
