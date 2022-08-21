@@ -10,7 +10,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-18.04 
+    runs-on: ubuntu-18.04
     env:      
     #   DOCKER_REGISTRY: brunohenriquep180@gmail.com      
        DOCKER_IMAGE: bhpdocker/terrarium_target:tagname      
@@ -92,6 +92,28 @@ jobs:
     - name: Analysing the code with doctest
       run: |
         python -m doctest -v test/test_with_doctest.py 
+
+
+
+    # delivery:
+
+  #   runs-on: ubuntu-18.04
+  #   needs: [test]
+  #   container: 
+  #      image: bhpdocker/terrarium_target:latest
+  #   # 
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: app
+  #   #     shell: bash
+    
+
+
+
+  #   steps:
+
+    - name: Docker Push
+      run: docker push ${{ env.DOCKER_IMAGE }}
 
 
 
