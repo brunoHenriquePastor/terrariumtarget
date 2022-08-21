@@ -41,7 +41,7 @@ jobs:
       run: |
         docker buildx build \
           --tag ${DOCKER_IMAGE} \
-          --platform linux/arm64,linux/arm/v7  .
+          --platform linux/arm64  .
 
 
 
