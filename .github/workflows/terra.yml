@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-18.04 
     env:      
     #   DOCKER_REGISTRY: brunohenriquep180@gmail.com      
-       DOCKER_IMAGE: bhpdocker/terrarium_target:latest      
+       DOCKER_IMAGE: bhpdocker/terrarium_target:tagname      
     #   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
     #   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
     #   DOCKER_TARGET_PLATFORM: linux/arm/v8
@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-18.04 
     needs: [build]
     container: 
-      image: bhpdocker/terrarium_target:latest
+      image: ${DOCKER_IMAGE}
 
 
     strategy:
