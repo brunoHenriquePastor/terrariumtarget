@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:      
     #   DOCKER_REGISTRY: brunohenriquep180@gmail.com      
-      DOCKER_IMAGE: bhpdocker/terrarium_target:tagname      
+      DOCKER_IMAGE: bhpdocker/terrarium_target      
     #   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
     #   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
     #   DOCKER_TARGET_PLATFORM: linux/arm/v8
@@ -119,14 +119,14 @@ jobs:
   #   steps:
 
     - name: Docker Push
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        platforms: linux/arm64
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: ${{ bhpdocker }}
-        labels: ${{ terrarium_target:tagname }}
-      #run: docker push ${{ env.DOCKER_IMAGE }}
+      # uses: docker/build-push-action@v2
+      # with:
+      #   context: .
+      #   platforms: linux/arm64
+      #   push: ${{ github.event_name != 'pull_request' }}
+      #   tags: ${{ bhpdocker }}
+      #   labels: ${{ terrarium_target:tagname }}
+      run: docker push ${{ env.DOCKER_IMAGE }}
 
 
 
