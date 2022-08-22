@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  build:
+  build_test_delivery:
 
     runs-on: ubuntu-20.04
     env:      
