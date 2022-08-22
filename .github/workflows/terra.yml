@@ -113,7 +113,14 @@ jobs:
   #   steps:
 
     - name: Docker Push
-      run: docker push ${{ env.DOCKER_IMAGE }}
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        platforms: linux/arm64
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.<meta_id>.outputs.tags }}
+        labels: ${{ steps.<meta_id>.outputs.labels }}
+      #run: docker push ${{ env.DOCKER_IMAGE }}
 
 
 
