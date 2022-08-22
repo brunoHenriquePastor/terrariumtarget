@@ -72,19 +72,19 @@ jobs:
     #     tags: ${{ env.DOCKER_IMAGE }}
 
 
-  test:
-    runs-on: ubuntu-20.04
+  # test:
+  #   runs-on: ubuntu-20.04
 
-    needs: [build]
+  #   needs: [build]
 
 
-    steps:
+  #   steps:
       
-    - name: Checkout
-      uses: actions/checkout@v2
-        # https://github.com/docker/setup-qemu-action
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #       # https://github.com/docker/setup-qemu-action
+  #   - name: Set up QEMU
+  #     uses: docker/setup-qemu-action@v1
 
 
     # - name: Install dependencies
@@ -268,62 +268,5 @@ jobs:
 
 
 
-  #   steps:
-    
-  #   - name: Build package
-  #     run: python -m build
-  #   - name: Publish package
-  #     uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-  #     with:
-  #       username: ${{ secrets.DOCKER_USERNAME }}
-  #       password: ${{ secrets.DOCKER_PASSWORD }}
 
-
-
-
-
-
-
-
-
-
-
-# stages:
-#   - build
-#   - test
-#   - delivery
-
-# variables:
-#   IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
-
-# build:
-#   image: docker:latest 
-#   services:
-#     - docker:dind
-#   stage: build
-
-#   script:
-#       - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-#       - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 -t $IMAGE_NAME .
-#   tags:
-#     - docker
-
-
-# test:
-#   image: $IMAGE_NAME
-#   stage: test
-#   script:
-#       - python -m doctest -v test/test_with_doctest.py 
-#   tags:
-#     - docker  
-
-# delivery:
-#   image: docker
-#   stage: delivery
-#   services:
-#      - name: docker:dind
-#   script:
-#     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD 
-#     - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 -t $CI_REGISTRY_IMAGE . #--platform linux/arm32v7
-#     - docker push $CI_REGISTRY_IMAGE
 
