@@ -87,15 +87,15 @@ jobs:
       uses: docker/setup-qemu-action@v1
 
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install pylint
   
-    - name: Analysing the code with pylint
-      run: |
-        pylint $(git ls-files '*.py')
-    - name: Analysing the code with doctest
+    # - name: Analysing the code with pylint
+    #   run: |
+    #     pylint $(git ls-files '*.py')
+    # - name: Analysing the code with doctest
       run: |
         python -m doctest -v test/test_with_doctest.py 
 
