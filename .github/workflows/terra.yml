@@ -72,14 +72,20 @@ jobs:
     #     tags: ${{ env.DOCKER_IMAGE }}
 
 
-  # test:
-  #   runs-on: ubuntu-18.04 
+  test:
+    runs-on: ubuntu-18.04 
 
-  #   needs: [build]
+    needs: [build]
 
 
-  #   steps:
-    
+    steps:
+      
+    - name: Checkout
+      uses: actions/checkout@v2
+        # https://github.com/docker/setup-qemu-action
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
 
     # - name: Install dependencies
     #   run: |
