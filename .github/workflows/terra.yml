@@ -10,7 +10,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:      
     #   DOCKER_REGISTRY: brunohenriquep180@gmail.com      
       DOCKER_IMAGE: bhpdocker/terrarium_target      
@@ -73,7 +73,7 @@ jobs:
 
 
   test:
-    runs-on: ubuntu-18.04 
+    runs-on: ubuntu-20.04
 
     needs: [build]
 
