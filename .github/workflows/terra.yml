@@ -44,32 +44,32 @@ jobs:
           --platform linux/arm64  .
 
 
-
-
-
-
-
-
-
-    # -
-    #   name: Build and export to Docker
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     context: .
-    #     load: true
-    #     tags: ${{ env.DOCKER_IMAGE }}
-    # -
-    #   name: Test
+    # - name: Install dependencies
     #   run: |
-    #     docker run --rm ${{ env.DOCKER_IMAGE }}
-    # -
-    #   name: Build and push
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     context: .
-    #     platforms: linux/amd64,linux/arm64,linux/arm/v7
-    #     push: true
-    #     tags: ${{ env.DOCKER_IMAGE }}
+    #     python -m pip install --upgrade pip
+    #     pip install pylint
+  
+    # - name: Analysing the code with pylint
+    #   run: |
+    #     pylint $(git ls-files '*.py')
+    - name: Analysing the code with doctest
+      run: |
+        python -m doctest -v test/test_with_doctest.py 
+
+
+    - name: Push to Docker Hub
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        platforms: linux/arm64
+        push: true
+        tags: bhpdocker/terrarium_target:latest #, bhpdocker/terrarium_target:${{ github.run_number }}
+    
+
+
+
+
+
 
 
   # test:
@@ -87,20 +87,6 @@ jobs:
   #     uses: docker/setup-qemu-action@v1
 
 
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install pylint
-  
-    # - name: Analysing the code with pylint
-    #   run: |
-    #     pylint $(git ls-files '*.py')
-    - name: Analysing the code with doctest
-      run: |
-        python -m doctest -v test/test_with_doctest.py 
-
-
-
     # delivery:
 
   #   runs-on: ubuntu-18.04
@@ -116,16 +102,7 @@ jobs:
 
 
 
-  #   steps:
 
-    - name: Push to Docker Hub
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        platforms: linux/arm64
-        push: true
-        tags: bhpdocker/terrarium_target:latest, bhpdocker/terrarium_target:${{ github.run_number }}
-    
 
 
 
@@ -138,136 +115,7 @@ jobs:
     #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
 
 
-    # - name: Login to Docker Hub
-    #   uses: docker/build-push-action@v1
-    #   with:
-    #     username: ${{ secrets.DOCKER_USERNAME }}
-    #     password: ${{ secrets.DOCKER_TOKEN }}
-
-    # - uses: docker/build-push-action@v2
-    # - name: Build the Docker image
-    #   run: |
-    #     echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-    #     docker image build -t bhpdocker/terrarium_target:latest .
-    
-    # - name: Prepare      
-    #   if: success()      
-    #   id: prepare      
-    #   run: |        
-    #     echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}        
-    #     echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}        
-    #     echo ::set-output name=version::${GITHUB_RUN_NUMBER}   
-
-    # - name: Docker Login      
-    #   if: success()      
-    #   run: |        
-    #     echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin
-    # - name: Run Buildx (push image)      
-    #   if: success()      
-    #   run: |        
-    #       docker buildx build \        
-    #       --platform ${{ steps.prepare.outputs.docker_platform }} \             
-    #       --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} \        
-    #       --file ./Dockerfile \        
-    #       --output type=image,push=true .
-
-
-
-
-    # - name: Setup Python
-    #   uses: actions/setup-python@v4.2.0
-    #   with:
-    #     # Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset.
-    #     python-version: # optional
-    #       arm32v7/python:3
-      
-    #     cache: # optional
-    #       x86
-
-    #     architecture: # optional
-    #       linux/arm32v7
-        
-
-    # - name: Build and push
-    #   if: github.event_name == 'pull_request'
-    #   id: docker_build
-    #   uses: docker/build-push-action@v2
-    #   with:
-    #     context: ./app
-    #     file: ./app/Dockerfile
-    #     push: true
-    #     tags: ${{ secrets.DOCKER_USERNAME }}/app:${{ steps.buildnumber.outputs.build_number }}
-
-
-
-
-
-
-
-
-  # test:
-  #   runs-on: ubuntu-18.04 
-  #   env:          
-  #         DOCKER_IMAGE: bhpdocker/terrarium_target:tagname   
-
-  #   needs: [build]
-  #   container: 
-  #     image: bhpdocker/terrarium_target:tagname
-
-
   #   strategy:
   #     matrix:
   #       python-version: ["3.8", "3.9", "3.10"]
-  #   steps:
-
-
-  #   - name: Analysing the code with pylint
-  #     run: |
-  #       pylint $(git ls-files '*.py')
-  #   - name: Analysing the code with doctest
-  #     run: |
-  #       - python -m doctest -v test/test_with_doctest.py 
-
-
-
-
-
-
-
-
-
-
-  #   - uses: actions/checkout@v3
-  #   - name: Set up Python ${{ matrix.python-version }}
-  #     uses: actions/setup-python@v3
-  #     with:
-  #       python-version: ${{ matrix.python-version }}
-  #   - name: Install dependencies
-  #     run: |
-  #       python -m pip install --upgrade pip
-  #       pip install pylint
   
-
-
-
-  # delivery:
-
-  #   runs-on: [self-hosted, linux, ARM64]
-  #   needs: [test]
-  #   container: 
-  #      image: bhpdocker/terrarium_target:latest
-  #   #   env:
-  #   #     NODE_ENV: arduinoEnv
-
-  #   # defaults:
-  #   #   run:
-  #   #     working-directory: app
-  #   #     shell: bash
-    
-  #   # env:
-  #   #     RUNNER_ARCH : ARM
-
-
-
-
-
