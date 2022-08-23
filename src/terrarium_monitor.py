@@ -12,7 +12,7 @@ import time # timer functions
 import paho.mqtt.client as mqtt
 from RPi import GPIO
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
-import src.atomic_terrarium as AT
+import atomic_terrarium as AT
 
 GPIO.setwarnings(False)
 
