@@ -8,7 +8,7 @@ import sys
 import doctest
 import uuid
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget')
-import TCC.terrariumtarget.src.atomic_terrarium as AT
+import src.atomic_terrarium as AT
 
 
 aleatorio = 10*random.random()
