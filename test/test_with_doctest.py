@@ -7,7 +7,7 @@ from datetime import date
 import sys
 import doctest
 import uuid
-sys.path.append(r'/home/brunohp/Documentos/development/TCC/terrariumtarget')
+sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget')
 import TCC.terrariumtarget.src.atomic_terrarium as AT
 
 

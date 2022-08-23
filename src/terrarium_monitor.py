@@ -11,7 +11,7 @@ import json # used to parse config.json
 import time # timer functions
 import paho.mqtt.client as mqtt
 from RPi import GPIO
-sys.path.append(r'/home/brunohp/Documentos/development/TCC/terrariumtarget/src')
+sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
 import TCC.terrariumtarget.src.atomic_terrarium as AT
 
 GPIO.setwarnings(False)
