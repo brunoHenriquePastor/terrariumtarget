@@ -1,5 +1,5 @@
 """
-Funções responsáveis por realizar ações de comando externo.
+Modulo responsavel por realizar ações de comando externo.
 Passam pelo teste estatico com o doctest.
 """
 
@@ -9,8 +9,8 @@ def form_data(times, sensor, pub_topic):
     """
     Função que trata a formatação dos dados a serem enviados
     """
-    list = [times, str(sensor)]
-    data = json.dumps(list)
+    lista = [times, str(sensor)]
+    data = json.dumps(lista)
     print("Publish to Topic" + pub_topic)
     print (str(sensor))
     return data

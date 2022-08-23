@@ -1,13 +1,16 @@
 #!/usr/bin/env/ python
 # -*- coding: utf8 -*-
+"""
+Classe principal, executa e faz a interfase de comunicação com a aplicação frontend.
+"""
 import paho.mqtt.client as mqtt
 import os
 import datetime
 import sys
-sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
 import json # used to parse config.json
 import time # timer functions
-import RPi.GPIO as GPIO
+sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
+from RPi import GPIO
 import TCC.terrariumtarget.src.atomic_terrarium as AT
 
 GPIO.setwarnings(False)
@@ -239,22 +242,24 @@ def publish(client):
 
     client.on_log = on_log
 
-try:
-    while True:
-        print("subscribing to topic " + sub_topic)
-        client.subscribe(sub_topic)
-        result = publish(client)
-        client.subscribe('testtopic/react')
-        client.on_message = on_message
-        if AT.aciona_irrigacao(on_message):
-            GPIO.output(17, GPIO.HIGH)
-            time.sleep(5)
-            GPIO.output(17, GPIO.LOW)
+def run_monitor() :
+    try:
+        while True:
+            print("subscribing to topic " + sub_topic)
+            client.subscribe(sub_topic)
+            result = publish(client)
+            client.subscribe('testtopic/react')
+            client.on_message = on_message
+            if AT.aciona_irrigacao(on_message):
+                GPIO.output(17, GPIO.HIGH)
+                time.sleep(5)
+                GPIO.output(17, GPIO.LOW)
 
 
 
-except Exception as e:
-    client.loop_stop()
-    print(e)
+    except Exception as e:
+        client.loop_stop()
+        print(e)
 
-
+if __name__ == '__main__':
+    run_monitor()

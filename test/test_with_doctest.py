@@ -1,14 +1,14 @@
 """
-Classe principal, executa e faz a interfase de comunicação com a aplicação frontend.
+Modulo que define as funções que passam por testes estáticos no Doctest.
 """
 
-from nis import match
+#from nis import match
 import random
 from datetime import date
 import sys
-sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget')
 import doctest
 import uuid
+sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget')
 import TCC.terrariumtarget.src.atomic_terrarium as AT
 
 
