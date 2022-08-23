@@ -276,7 +276,7 @@ def run_monitor() :
     """
     try:
         while True:
-            print("subscribing to topic " + sub_topic)
+            print("subscribing to topic on client" + sub_topic)
             client.subscribe(sub_topic)
             result = publish(client)
             client.subscribe('testtopic/react')
@@ -285,7 +285,6 @@ def run_monitor() :
                 GPIO.output(17, GPIO.HIGH)
                 time.sleep(5)
                 GPIO.output(17, GPIO.LOW)
-
 
 
     except Exception as e:
