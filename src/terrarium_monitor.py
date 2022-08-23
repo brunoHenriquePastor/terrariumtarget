@@ -25,12 +25,12 @@ GPIO.setup(4, GPIO.IN)
 GPIO.setup(5, GPIO.OUT)
 GPIO.setup(17, GPIO.OUT)
 
-Sensor_Umi  = 2
+sensor_umi  = 2
 sensor_lumi0 = 3
 sensor_lumi1 = 5
 sensor_temp_umi = 4
 
-GPIO.input(Sensor_Umi)
+GPIO.input(sensor_umi)
 GPIO.input(sensor_lumi0)
 GPIO.input(sensor_lumi0)
 GPIO.input(sensor_temp_umi)
@@ -256,7 +256,7 @@ def publish(client):
     client.publish(pub_topic_umi_ar, data)
     #Umidade
     print ("checking umi and posting")
-    data = AT.form_data(timestamp,GPIO.input(Sensor_Umi),pub_topic_umi)
+    data = AT.form_data(timestamp,GPIO.input(sensor_umi),pub_topic_umi)
     #punblish to topic
     client.publish(pub_topic_umi, data)
     #luminosidade
