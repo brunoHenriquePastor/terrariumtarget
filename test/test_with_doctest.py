@@ -2,7 +2,6 @@
 Modulo que define as funções que passam por testes estáticos no Doctest.
 """
 
-#from nis import match
 import random
 from datetime import date
 import sys
@@ -16,6 +15,9 @@ aleatorio = 10*random.random()
 SAlea = uuid.uuid4()
 
 def test_form_data():
+    """
+    Teste da função que gera o formado do dado a ser enviado.
+    """
     Sdate = str(date(2000, 1, 4))
     Svalor = str(aleatorio)
     '''
@@ -40,4 +42,7 @@ def test_aciona_irrigacao(data):
 #      client.get("broker.emqx.io").status_code
 
 if __name__ == '__main__':
+    """
+    Roda funcionalidades do modulo.
+    """
     doctest.testmod()

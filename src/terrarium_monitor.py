@@ -25,12 +25,12 @@ GPIO.setup(4, GPIO.IN)
 GPIO.setup(5, GPIO.OUT)
 GPIO.setup(17, GPIO.OUT)
 
-sensor_umi  = 2
+Sensor_Umi  = 2
 sensor_lumi0 = 3
 sensor_lumi1 = 5
 sensor_temp_umi = 4
 
-GPIO.input(sensor_umi)
+GPIO.input(Sensor_Umi)
 GPIO.input(sensor_lumi0)
 GPIO.input(sensor_lumi0)
 GPIO.input(sensor_temp_umi)
@@ -97,8 +97,8 @@ def read_tem_umi(sensor):
         #declara as variaveis que irao receber os bits lidos
     bit_count = 0
     count = 0
-    HumidityBit = ""
-    TemperatureBit = ""
+    Humidity_Bit = ""
+    Temperature_Bit = ""
     crc = ""
 
     #inicia a tentativa de recuperar os bits
@@ -119,15 +119,15 @@ def read_tem_umi(sensor):
 
             if bit_count > 3:
                 if i>=0 and i<8:
-                    HumidityBit = HumidityBit + "1"
+                    Humidity_Bit = Humidity_Bit + "1"
                 if i>=16 and i<24:
-                    TemperatureBit = TemperatureBit + "1"
+                    Temperature_Bit = Temperature_Bit + "1"
             else:
                 if i>=0 and i<8:
 
-                    HumidityBit = HumidityBit + "0"
+                    Humidity_Bit = Humidity_Bit + "0"
                 if i>=16 and i<24:
-                    TemperatureBit = TemperatureBit + "0"
+                    Temperature_Bit = Temperature_Bit + "0"
 
     except:
         #caso ocorrra algum erro entra em excecao
@@ -164,8 +164,8 @@ def read_tem_umi(sensor):
         # chamando o metodo bin2dec e armazena nas variaveis
         # HUmidity e  Temperature
     try:
-        Humidity = bin2dec(HumidityBit)
-        Temperature = bin2dec(TemperatureBit)
+        Humidity = bin2dec(Humidity_Bit)
+        Temperature = bin2dec(Temperature_Bit)
 
         if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:
             return Temperature, Humidity
@@ -256,7 +256,7 @@ def publish(client):
     client.publish(pub_topic_umi_ar, data)
     #Umidade
     print ("checking umi and posting")
-    data = AT.form_data(timestamp,GPIO.input(sensor_umi),pub_topic_umi)
+    data = AT.form_data(timestamp,GPIO.input(Sensor_Umi),pub_topic_umi)
     #punblish to topic
     client.publish(pub_topic_umi, data)
     #luminosidade
