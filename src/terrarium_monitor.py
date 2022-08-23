@@ -61,11 +61,7 @@ os.system('modprobe w1-therm')
 
 # base_dir = '/sys/bus/w1/devices/'
  # device_file_list = glob.glob(base_dir + '28*')[0] + '/w1_slave'
-
-
-
 #class Terrarium:
-      
 #MQTT init
 print("Initalizing MQTT Client instance: " + client_id)
 client =  mqtt.Client(client_id) #define de topic "raspiberry"
@@ -83,35 +79,34 @@ def read_tem_umi(sensor):
     if len(data) > 0 :
         #remove os itens do array que recupera os dados
         del data[0: len(data)]
-                            
-                    
+
+
     #armazena os dados lidos do pino 4 na variavel global data
     for i in range(0, 500):
         data.append(GPIO.input(sensor))
         #declara as variaveis que irao receber os bits lidos
     bit_count = 0
-    tmp = 0
     count = 0
     HumidityBit = ""
     TemperatureBit = ""
     crc = ""
-                    
-    #inicia a tentativa de recuperar os bits 
+
+    #inicia a tentativa de recuperar os bits
     try:
         while data[count] == 1:
             tmp = 1
             count = count + 1
-                    
+
         for i in range(0, 32):
             bit_count = 0
-                    
+
             while data[count] == 0:
                 tmp = 1
                 count = count + 1
             while data[count] == 1:
                 bit_count = bit_count + 1
                 count = count + 1
-                    
+
             if bit_count > 3:
                 if i>=0 and i<8:
                     HumidityBit = HumidityBit + "1"
@@ -123,52 +118,52 @@ def read_tem_umi(sensor):
                     HumidityBit = HumidityBit + "0"
                 if i>=16 and i<24:
                     TemperatureBit = TemperatureBit + "0"
-                    
+
     except:
         #caso ocorrra algum erro entra em excecao
         #print "ERR_RANGE"
         print("ERRO NA RESPOSTAS DE BITS")
         #exit(0)
-                    
-                    
+
+
     #tenta fazer verificacao se os bits forao recebidos corretamente (total sao 8)
     try:
         for i in range(0, 8):
             bit_count = 0
-            
+
             while data[count] == 0:
                 tmp = 1
                 count = count + 1
-            
+
             while data[count] == 1:
                 bit_count = bit_count + 1
                 count = count + 1
-        
+
         if bit_count > 3:
             crc = crc + "1"
         else:
             crc = crc + "0"
-                                    
+
     except:
         #print "ERR_RANGE"
         print("ERRO NA RESPOSTAS DE BITS")
         #exit(0)
-                    
-                    
+
+
         #E por fim Tenta fazer a conversao de binario para inteiro
         # chamando o metodo bin2dec e armazena nas variaveis
         # HUmidity e  Temperature
     try:
         Humidity = bin2dec(HumidityBit)
         Temperature = bin2dec(TemperatureBit)
-                    
+
         if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:
             return Temperature, Humidity
-                    
+
     except:
         print("ERRO DE CONVERSAO DE BINARIO PARA INTEIRO")
         #exit(0)
-                    
+
     time.sleep(10)
 
 
@@ -184,11 +179,10 @@ def carga():
     GPIO.setup(sensor_lumi0,GPIO.OUT)
     contador = 0
     GPIO.output(sensor_lumi0,1)
-    while(GPIO.input(sensor_lumi1)==0):
+    while GPIO.input(sensor_lumi1) == 0:
         contador = contador + 1
     time.sleep(3)
     return contador
-
 
 
 def leitura_analogica():
@@ -245,19 +239,19 @@ def publish(client):
 
     client.on_log = on_log
 
-try:    
+try:
     while True:
         print("subscribing to topic " + sub_topic)
         client.subscribe(sub_topic)
         result = publish(client)
         client.subscribe('testtopic/react')
         client.on_message = on_message
-        if (AT.aciona_irrigacao(on_message)):
+        if AT.aciona_irrigacao(on_message):
             GPIO.output(17, GPIO.HIGH)
             time.sleep(5)
             GPIO.output(17, GPIO.LOW)
-                        
-                        
+
+
 
 except Exception as e:
     client.loop_stop()

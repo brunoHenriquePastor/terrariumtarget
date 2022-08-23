@@ -1,5 +1,5 @@
 """
-Funções responsáveis por realizar ações de comando externo. 
+Funções responsáveis por realizar ações de comando externo.
 Passam pelo teste estatico com o doctest.
 """
 

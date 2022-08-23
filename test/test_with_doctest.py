@@ -13,7 +13,7 @@ import TCC.terrariumtarget.src.atomic_terrarium as AT
 
 
 aleatorio = 10*random.random()
-SAlea = uuid.uuid4() 
+SAlea = uuid.uuid4()
 
 def test_form_data():
     Sdate = str(date(2000, 1, 4))
@@ -33,7 +33,7 @@ def test_aciona_irrigacao(data):
     True
     >>> test_aciona_irrigacao(SAlea)
     False
-    '''    
+    '''
     return AT.aciona_irrigacao(data)
 
 # def test_test_request_returns_200():
