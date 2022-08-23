@@ -1,5 +1,6 @@
 """
-Funções responsáveis por realizar ações de comando externo. Passam pelo teste estatico com o doctest.
+Funções responsáveis por realizar ações de comando externo. 
+Passam pelo teste estatico com o doctest.
 """
 
 import json

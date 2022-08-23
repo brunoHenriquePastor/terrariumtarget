@@ -53,7 +53,7 @@ pub_topic_umi_ar="greenhouse/umi_ar"
 pub_topic_lumi="greenhouse/lumi"
 sub_topic="greenhouse/temp"
 PortaBroker = 1883
-KeepAliveBroker = 60 
+KeepAliveBroker = 60
 
 
 os.system('modprobe w1-gpio')
@@ -74,22 +74,21 @@ print("connecting to broker: " + broker_address)
 client.connect(broker_address)
 
 def bin2dec(string_num):
-        return str(int(string_num, 2))
+    return str(int(string_num, 2))
 
 
 def read_tem_umi(sensor):
     data = []
 
     if len(data) > 0 :
-        #remove os itens do array que recupera os dados  
+        #remove os itens do array que recupera os dados
         del data[0: len(data)]
                             
                     
     #armazena os dados lidos do pino 4 na variavel global data
     for i in range(0, 500):
         data.append(GPIO.input(sensor))
-                    
-            #declara as variaveis que irao receber os bits lidos
+        #declara as variaveis que irao receber os bits lidos
     bit_count = 0
     tmp = 0
     count = 0
@@ -109,7 +108,6 @@ def read_tem_umi(sensor):
             while data[count] == 0:
                 tmp = 1
                 count = count + 1
-                    
             while data[count] == 1:
                 bit_count = bit_count + 1
                 count = count + 1
@@ -127,10 +125,10 @@ def read_tem_umi(sensor):
                     TemperatureBit = TemperatureBit + "0"
                     
     except:
-            #caso ocorrra algum erro entra em excecao
-            #print "ERR_RANGE"
-            print("ERRO NA RESPOSTAS DE BITS")
-            #exit(0)
+        #caso ocorrra algum erro entra em excecao
+        #print "ERR_RANGE"
+        print("ERRO NA RESPOSTAS DE BITS")
+        #exit(0)
                     
                     
     #tenta fazer verificacao se os bits forao recebidos corretamente (total sao 8)
@@ -165,14 +163,14 @@ def read_tem_umi(sensor):
         Temperature = bin2dec(TemperatureBit)
                     
         if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:
-            return Temperature, Humidity 
+            return Temperature, Humidity
                     
     except:
         print("ERRO DE CONVERSAO DE BINARIO PARA INTEIRO")
         #exit(0)
                     
     time.sleep(10)
-        
+
 
 
 def descarga():
@@ -194,12 +192,12 @@ def carga():
 
 
 def leitura_analogica():
-	descarga()
-	return carga()
+    descarga()
+    return carga()
 
 def inten_lum():
     if leitura_analogica() > 100:
-            return 1		
+        return 1
     return 0
 
 
@@ -217,7 +215,7 @@ def on_message(client,userdata,message):
 
         #callback function on log
 def on_log(client, userdata, level,buf):
-        print("log: ", buf)
+    print("log: ", buf)
 
 def publish(client):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -243,7 +241,7 @@ def publish(client):
     client.publish(pub_topic_lumi, data)
 
     print("Sleeping")
-    time.sleep(1)       
+    time.sleep(1)
 
     client.on_log = on_log
 
