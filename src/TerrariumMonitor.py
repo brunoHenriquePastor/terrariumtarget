@@ -5,13 +5,14 @@ import os
 import datetime
 import sys
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
-
-import Atomic_Terrarium as AT
-import RPi.GPIO as GPIO
-
 import json # used to parse config.json
 import time # timer functions
 import paho.mqtt.client as mqtt
+import RPi.GPIO as GPIO
+import TCC.terrariumtarget.src.atomic_terrarium as AT
+
+
+
 
 
 GPIO.setwarnings(False)
@@ -91,7 +92,7 @@ def read_tem_umi(sensor):
                                 
                         
                 #armazena os dados lidos do pino 4 na variavel global data
-        for i in range(0,500):
+        for i in range(0, 500):
                 data.append(GPIO.input(sensor))
                         
                         #declara as variaveis que irao receber os bits lidos
@@ -203,8 +204,7 @@ def leitura_analogica():
 def inten_lum():
         if leitura_analogica() > 100:
                 return 1		
-        else:
-                return 0
+        return 0
 
 
 

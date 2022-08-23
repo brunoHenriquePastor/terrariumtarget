@@ -1,3 +1,8 @@
+"""
+Classe principal, executa e faz a interfase de comunicação com a aplicação frontend.
+"""
+
+
 from nis import match
 import random
 from datetime import date
