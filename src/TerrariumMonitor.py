@@ -1,19 +1,14 @@
 #!/usr/bin/env/ python
 # -*- coding: utf8 -*-
-
+import paho.mqtt.client as mqtt
 import os
 import datetime
 import sys
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
 import json # used to parse config.json
 import time # timer functions
-import paho.mqtt.client as mqtt
 import RPi.GPIO as GPIO
 import TCC.terrariumtarget.src.atomic_terrarium as AT
-
-
-
-
 
 GPIO.setwarnings(False)
 
@@ -74,7 +69,6 @@ os.system('modprobe w1-therm')
 #MQTT init
 print("Initalizing MQTT Client instance: " + client_id)
 client =  mqtt.Client(client_id) #define de topic "raspiberry"
-
 #Connect to broker
 print("connecting to broker: " + broker_address)
 client.connect(broker_address)
@@ -85,13 +79,13 @@ def bin2dec(string_num):
 
 def read_tem_umi(sensor):
     data = []
-            
-    if(len(data)>0):
+
+    if len(data) > 0 :
         #remove os itens do array que recupera os dados  
         del data[0: len(data)]
                             
                     
-        #armazena os dados lidos do pino 4 na variavel global data
+    #armazena os dados lidos do pino 4 na variavel global data
     for i in range(0, 500):
         data.append(GPIO.input(sensor))
                     
@@ -133,49 +127,49 @@ def read_tem_umi(sensor):
                     TemperatureBit = TemperatureBit + "0"
                     
     except:
-                            #caso ocorrra algum erro entra em excecao
-                            #print "ERR_RANGE"
+            #caso ocorrra algum erro entra em excecao
+            #print "ERR_RANGE"
             print("ERRO NA RESPOSTAS DE BITS")
-                            #exit(0)
+            #exit(0)
                     
                     
-            #tenta fazer verificacao se os bits forao recebidos corretamente (total sao 8)
+    #tenta fazer verificacao se os bits forao recebidos corretamente (total sao 8)
     try:
-            for i in range(0, 8):
-                bit_count = 0
+        for i in range(0, 8):
+            bit_count = 0
             
-                while data[count] == 0:
-                    tmp = 1
-                    count = count + 1
+            while data[count] == 0:
+                tmp = 1
+                count = count + 1
             
-                while data[count] == 1:
-                    bit_count = bit_count + 1
-                    count = count + 1
-            
-            if bit_count > 3:
-                    crc = crc + "1"
-            else:
-                    crc = crc + "0"
+            while data[count] == 1:
+                bit_count = bit_count + 1
+                count = count + 1
+        
+        if bit_count > 3:
+            crc = crc + "1"
+        else:
+            crc = crc + "0"
                                     
     except:
-                            #print "ERR_RANGE"
-            print("ERRO NA RESPOSTAS DE BITS")
-                            #exit(0)
+        #print "ERR_RANGE"
+        print("ERRO NA RESPOSTAS DE BITS")
+        #exit(0)
                     
                     
-                    #E por fim Tenta fazer a conversao de binario para inteiro
-                    # chamando o metodo bin2dec e armazena nas variaveis
-                    # HUmidity e  Temperature
+        #E por fim Tenta fazer a conversao de binario para inteiro
+        # chamando o metodo bin2dec e armazena nas variaveis
+        # HUmidity e  Temperature
     try:
-            Humidity = bin2dec(HumidityBit)
-            Temperature = bin2dec(TemperatureBit)
+        Humidity = bin2dec(HumidityBit)
+        Temperature = bin2dec(TemperatureBit)
                     
-            if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:
-                return Temperature, Humidity 
+        if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:
+            return Temperature, Humidity 
                     
     except:
         print("ERRO DE CONVERSAO DE BINARIO PARA INTEIRO")
-            #exit(0)
+        #exit(0)
                     
     time.sleep(10)
         
