@@ -3,14 +3,15 @@
 """
 Classe principal, executa e faz a interfase de comunicação com a aplicação frontend.
 """
-import paho.mqtt.client as mqtt
+
 import os
 import datetime
 import sys
 import json # used to parse config.json
 import time # timer functions
-sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
+import paho.mqtt.client as mqtt
 from RPi import GPIO
+sys.path.append(r'/home/brunohp/Documentos/development/TCC/terrariumtarget/src')
 import TCC.terrariumtarget.src.atomic_terrarium as AT
 
 GPIO.setwarnings(False)
@@ -73,10 +74,16 @@ print("connecting to broker: " + broker_address)
 client.connect(broker_address)
 
 def bin2dec(string_num):
+    """
+    Converte binario em descimal
+    """
     return str(int(string_num, 2))
 
 
 def read_tem_umi(sensor):
+    """
+    Leitura e tratamendo dos dados do sensor de temperatura e umidade
+    """
     data = []
 
     if len(data) > 0 :
@@ -172,12 +179,18 @@ def read_tem_umi(sensor):
 
 
 def descarga():
+    """
+    controle de carga para leitura do sensor de luminosidade
+    """
     GPIO.setup(sensor_lumi0,GPIO.IN)
     GPIO.setup(sensor_lumi1,GPIO.OUT)
     GPIO.output(sensor_lumi1,0)
     time.sleep(0.005)
 
 def carga():
+    """
+    controle de carga para leitura do sensor de luminosidade
+    """
     GPIO.setup(sensor_lumi1,GPIO.IN)
     GPIO.setup(sensor_lumi0,GPIO.OUT)
     contador = 0
@@ -189,10 +202,16 @@ def carga():
 
 
 def leitura_analogica():
+    """
+    controle de carga para leitura do sensor de luminosidade
+    """
     descarga()
     return carga()
 
 def inten_lum():
+    """
+    Define um limear para auta e baixa luminosidade
+    """
     if leitura_analogica() > 100:
         return 1
     return 0
@@ -200,7 +219,10 @@ def inten_lum():
 
 
 #Callback function on message receive
-def on_message(client,userdata,message):
+def on_message(message): #client,userdata,
+    """
+    sobrescreve a função a ser enviada que formata a mensagem a ser enviada
+    """
     print("message received",str(message.payload.decode("utf-8")))
     data = json.loads(str(message.payload.decode("utf-8","ignore")))
     print(data)
@@ -211,10 +233,16 @@ def on_message(client,userdata,message):
 
 
         #callback function on log
-def on_log(client, userdata, level,buf):
+def on_log(buf): #client, userdata, level,
+    """
+    leitura das informações no buffer de chegada e saida de dados.
+    """
     print("log: ", buf)
 
 def publish(client):
+    """
+    publica dados coletados no cliente MQTT.
+    """
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print ("checking temp and posting")
     #temperatura
@@ -243,6 +271,9 @@ def publish(client):
     client.on_log = on_log
 
 def run_monitor() :
+    """
+    Principal função, executa funções da aplicação backend.
+    """
     try:
         while True:
             print("subscribing to topic " + sub_topic)
@@ -262,4 +293,7 @@ def run_monitor() :
         print(e)
 
 if __name__ == '__main__':
+    """
+    Roda funcionalidades do modulo.
+    """
     run_monitor()
