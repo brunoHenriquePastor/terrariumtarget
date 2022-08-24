@@ -11,7 +11,8 @@ clean:
 	pip install -e .[dev] --upgrade --no-cache
 
 install:
+	sudo adduser pi gpio
 	pip install -e .['dev'] 
 
-test:
-	pytest test/ -v --cov=src
+# test:
+# 	pytest test/ -v --cov=src
