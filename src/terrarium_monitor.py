@@ -51,10 +51,6 @@ leitura = 0
         #MQTT Details
 broker_address="broker.emqx.io"   #"iot.eclipse.org"
 client_id="raspberry"
-pub_topic_temp="greenhouse/temp"
-pub_topic_umi="greenhouse/umi"
-pub_topic_umi_ar="greenhouse/umi_ar"
-pub_topic_lumi="greenhouse/lumi"
 sub_topic="greenhouse/temp"
 PortaBroker = 1883
 KeepAliveBroker = 60
@@ -84,7 +80,7 @@ def read_tem_umi(sensor):
     """
     Leitura e tratamendo dos dados do sensor de temperatura e umidade
     """
-    data = []
+    data = [0,0]
 
     if len(data) > 0 :
         #remove os itens do array que recupera os dados
@@ -182,6 +178,7 @@ def descarga():
     """
     controle de carga para leitura do sensor de luminosidade
     """
+    global sensor_lumi0, sensor_lumi1
     GPIO.setup(sensor_lumi0,GPIO.IN)
     GPIO.setup(sensor_lumi1,GPIO.OUT)
     GPIO.output(sensor_lumi1,0)
@@ -191,6 +188,7 @@ def carga():
     """
     controle de carga para leitura do sensor de luminosidade
     """
+    global sensor_lumi0, sensor_lumi1
     GPIO.setup(sensor_lumi1,GPIO.IN)
     GPIO.setup(sensor_lumi0,GPIO.OUT)
     contador = 0
@@ -243,6 +241,12 @@ def publish(client):
     """
     publica dados coletados no cliente MQTT.
     """
+    global sensor_temp_umi, sensor_umi
+    pub_topic_temp="greenhouse/temp"
+    pub_topic_umi="greenhouse/umi"
+    pub_topic_umi_ar="greenhouse/umi_ar"
+    pub_topic_lumi="greenhouse/lumi"
+
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print ("checking temp and posting")
     #temperatura
@@ -251,7 +255,7 @@ def publish(client):
     client.publish(pub_topic_temp, data)
     print ("checking umi ar and posting")
     #Umidade Ar
-    data = AT.form_data(timestamp, read_tem_umi(sensor_temp_umi)[1], pub_topic_temp)
+    data = AT.form_data(timestamp, read_tem_umi(sensor_temp_umi)[1], pub_topic_umi_ar)
         #punblish to topic
     client.publish(pub_topic_umi_ar, data)
     #Umidade
@@ -274,6 +278,7 @@ def run_monitor() :
     """
     Principal função, executa funções da aplicação backend.
     """
+    global sub_topic
     try:
         while True:
             print("subscribing to topic on client" + sub_topic)
