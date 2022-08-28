@@ -105,13 +105,22 @@ def read_tem_umi(sensor):
 
         for i in range(0, 32):
             bit_count = 0
+            if len(data)-1 == count:
+                    count = 0
+                    break
 
             while data[count] == 0:
                 tmp = 1
                 count = count + 1
+                if len(data)-1 == count:
+                    count = 0
+                    break
             while data[count] == 1:
                 bit_count = bit_count + 1
                 count = count + 1
+                if len(data)-1 == count:
+                    count = 0
+                    break
 
             if bit_count > 3:
                 if i>=0 and i<8:
@@ -140,10 +149,16 @@ def read_tem_umi(sensor):
             while data[count] == 0:
                 tmp = 1
                 count = count + 1
+                if len(data)-1 == count:
+                    count = 0
+                    break
 
             while data[count] == 1:
                 bit_count = bit_count + 1
                 count = count + 1
+                if len(data)-1 == count:
+                    count = 0
+                    break
 
         if bit_count > 3:
             crc = crc + "1"
@@ -270,7 +285,7 @@ def publish(client):
     client.publish(pub_topic_lumi, data)
 
     print("Sleeping")
-    time.sleep(1)
+    time.sleep(5)
 
     client.on_log = on_log
 
