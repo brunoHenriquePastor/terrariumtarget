@@ -9,8 +9,8 @@ import datetime
 import sys
 import json # used to parse config.json
 import time # timer functions
-import paho.mqtt.client as mqtt
 from RPi import GPIO
+import paho.mqtt.client as mqtt
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
 import atomic_terrarium as AT
 
@@ -41,9 +41,9 @@ GPIO.input(sensor_temp_umi)
 # sensor_temp = GPIO.input(4)
 
         # VARIAVEL PARA ARMAZENAR A LEITURA
-varUmi  = 0.0
-varLumi = 0.0
-varTemp = 0.0
+# varUmi  = 0.0
+# varLumi = 0.0
+# varTemp = 0.0
 
         # VARIAVEL PARA MARCAR A VEZ DE QUAL PORTA SERÁ LIDA
 leitura = 0
@@ -80,7 +80,7 @@ def read_tem_umi(sensor):
     """
     Leitura e tratamendo dos dados do sensor de temperatura e umidade
     """
-    data = [0,0]
+    data = []
 
     if len(data) > 0 :
         #remove os itens do array que recupera os dados
@@ -102,17 +102,18 @@ def read_tem_umi(sensor):
         while data[count] == 1:
             tmp = 1
             count = count + 1
+            if len(data)-1 == count:
+                count = 0
+                break
 
         for i in range(0, 32):
             bit_count = 0
-            if len(data)-1 == count:
-                    count = 0
-                    break
+            #count = 0
 
             while data[count] == 0:
                 tmp = 1
                 count = count + 1
-                if len(data)-1 == count:
+                if len(data) == count:
                     count = 0
                     break
             while data[count] == 1:
@@ -121,7 +122,7 @@ def read_tem_umi(sensor):
                 if len(data)-1 == count:
                     count = 0
                     break
-
+        
             if bit_count > 3:
                 if i>=0 and i<8:
                     Humidity_Bit = Humidity_Bit + "1"
@@ -129,15 +130,15 @@ def read_tem_umi(sensor):
                     Temperature_Bit = Temperature_Bit + "1"
             else:
                 if i>=0 and i<8:
-
                     Humidity_Bit = Humidity_Bit + "0"
                 if i>=16 and i<24:
                     Temperature_Bit = Temperature_Bit + "0"
 
-    except:
+    except Exception as e: 
+        print(repr(e)) 
         #caso ocorrra algum erro entra em excecao
         #print "ERR_RANGE"
-        print("ERRO NA RESPOSTAS DE BITS")
+        print("ERRO NA RESPOSTAS DE BITS 1")
         #exit(0)
 
 
@@ -145,6 +146,7 @@ def read_tem_umi(sensor):
     try:
         for i in range(0, 8):
             bit_count = 0
+            #count = 0
 
             while data[count] == 0:
                 tmp = 1
@@ -165,9 +167,10 @@ def read_tem_umi(sensor):
         else:
             crc = crc + "0"
 
-    except:
+    except Exception as e: 
+        print(repr(e))
         #print "ERR_RANGE"
-        print("ERRO NA RESPOSTAS DE BITS")
+        print("ERRO NA RESPOSTAS DE BITS 2")
         #exit(0)
 
 
@@ -181,7 +184,8 @@ def read_tem_umi(sensor):
         if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:
             return Temperature, Humidity
 
-    except:
+    except Exception as e: 
+        print(repr(e))
         print("ERRO DE CONVERSAO DE BINARIO PARA INTEIRO")
         #exit(0)
 
@@ -284,7 +288,7 @@ def publish(client):
     #punblish to topic
     client.publish(pub_topic_lumi, data)
 
-    print("Sleeping")
+    print("Sleeping\n\n\n")
     time.sleep(5)
 
     client.on_log = on_log
