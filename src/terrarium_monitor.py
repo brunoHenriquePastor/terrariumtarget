@@ -3,55 +3,37 @@
 """
 Classe principal, executa e faz a interfase de comunicação com a aplicação frontend.
 """
-
+#import board
 import os
 import datetime
 import sys
 import json # used to parse config.json
 import time # timer functions
 from RPi import GPIO
+from pigpio_dht import DHT11
+from gpiozero import LightSensor
+#import Adafruit_DHT
+
+
 import paho.mqtt.client as mqtt
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
 import atomic_terrarium as AT
 
 GPIO.setwarnings(False)
 
+gpio_irriga = 17
+
 GPIO.setmode(GPIO.BCM)
+GPIO.setup(gpio_irriga,  GPIO.OUT)
 
-GPIO.setup(2, GPIO.IN)
-GPIO.setup(3, GPIO.IN)
-GPIO.setup(4, GPIO.IN)
+gpio_lumi = 4
+gpio_umi  = 22
+gpio_temp_umi = 27
 
-GPIO.setup(5, GPIO.OUT)
-GPIO.setup(17, GPIO.OUT)
-
-sensor_umi  = 2
-sensor_lumi0 = 3
-sensor_lumi1 = 5
-sensor_temp_umi = 4
-
-GPIO.input(sensor_umi)
-GPIO.input(sensor_lumi0)
-GPIO.input(sensor_lumi0)
-GPIO.input(sensor_temp_umi)
-
-
-# sensor_umi  = GPIO.input(2)
-# sensor_lumi = GPIO.input(3)
-# sensor_temp = GPIO.input(4)
-
-        # VARIAVEL PARA ARMAZENAR A LEITURA
-# varUmi  = 0.0
-# varLumi = 0.0
-# varTemp = 0.0
-
-        # VARIAVEL PARA MARCAR A VEZ DE QUAL PORTA SERÁ LIDA
-leitura = 0
 
         #MQTT Details
 broker_address="broker.emqx.io"   #"iot.eclipse.org"
 client_id="raspberry"
-sub_topic="greenhouse/temp"
 PortaBroker = 1883
 KeepAliveBroker = 60
 
@@ -69,171 +51,51 @@ client =  mqtt.Client(client_id) #define de topic "raspiberry"
 print("connecting to broker: " + broker_address)
 client.connect(broker_address)
 
-def bin2dec(string_num):
-    """
-    Converte binario em descimal
-    """
-    return str(int(string_num, 2))
 
 
-def read_tem_umi(sensor):
+def read_tem_umi(gpio):
     """
     Leitura e tratamendo dos dados do sensor de temperatura e umidade
     """
-    data = []
-
-    if len(data) > 0 :
-        #remove os itens do array que recupera os dados
-        del data[0: len(data)]
-
-
-    #armazena os dados lidos do pino 4 na variavel global data
-    for i in range(0, 500):
-        data.append(GPIO.input(sensor))
-        #declara as variaveis que irao receber os bits lidos
-    bit_count = 0
-    count = 0
-    Humidity_Bit = ""
-    Temperature_Bit = ""
-    crc = ""
-
-    #inicia a tentativa de recuperar os bits
+    temperature = 0
+    humidity = 0
     try:
-        while data[count] == 1:
-            tmp = 1
-            count = count + 1
-            if len(data)-1 == count:
-                count = 0
-                break
+        sensor = DHT11(gpio)
 
-        for i in range(0, 32):
-            bit_count = 0
-            #count = 0
-
-            while data[count] == 0:
-                tmp = 1
-                count = count + 1
-                if len(data) == count:
-                    count = 0
-                    break
-            while data[count] == 1:
-                bit_count = bit_count + 1
-                count = count + 1
-                if len(data)-1 == count:
-                    count = 0
-                    break
+        result = sensor.read()
         
-            if bit_count > 3:
-                if i>=0 and i<8:
-                    Humidity_Bit = Humidity_Bit + "1"
-                if i>=16 and i<24:
-                    Temperature_Bit = Temperature_Bit + "1"
-            else:
-                if i>=0 and i<8:
-                    Humidity_Bit = Humidity_Bit + "0"
-                if i>=16 and i<24:
-                    Temperature_Bit = Temperature_Bit + "0"
+        temperature = result['temp_c']
+        humidity = result['humidity']
 
+        if humidity is not None and temperature is not None:
+            print('Temp={0:0.1f}*  Humidity{1:0.1f}%'.format(temperature,humidity))
+            return temperature, humidity
+        else:
+            print('Failed to get reading. Try again!')
     except Exception as e: 
-        print(repr(e)) 
+        print(repr(e))
+        return temperature, humidity
         #caso ocorrra algum erro entra em excecao
         #print "ERR_RANGE"
-        print("ERRO NA RESPOSTAS DE BITS 1")
+        print("ISSUE IN READING DHT11")
         #exit(0)
-
-
-    #tenta fazer verificacao se os bits forao recebidos corretamente (total sao 8)
-    try:
-        for i in range(0, 8):
-            bit_count = 0
-            #count = 0
-
-            while data[count] == 0:
-                tmp = 1
-                count = count + 1
-                if len(data)-1 == count:
-                    count = 0
-                    break
-
-            while data[count] == 1:
-                bit_count = bit_count + 1
-                count = count + 1
-                if len(data)-1 == count:
-                    count = 0
-                    break
-
-        if bit_count > 3:
-            crc = crc + "1"
-        else:
-            crc = crc + "0"
-
-    except Exception as e: 
-        print(repr(e))
-        #print "ERR_RANGE"
-        print("ERRO NA RESPOSTAS DE BITS 2")
-        #exit(0)
-
-
-        #E por fim Tenta fazer a conversao de binario para inteiro
-        # chamando o metodo bin2dec e armazena nas variaveis
-        # HUmidity e  Temperature
-    try:
-        Humidity = bin2dec(Humidity_Bit)
-        Temperature = bin2dec(Temperature_Bit)
-
-        if int(Humidity) + int(Temperature) - int(bin2dec(crc)) == 0:
-            return Temperature, Humidity
-
-    except Exception as e: 
-        print(repr(e))
-        print("ERRO DE CONVERSAO DE BINARIO PARA INTEIRO")
-        #exit(0)
-
-    time.sleep(10)
+    time.sleep(5)
 
 
 
-def descarga():
-    """
-    controle de carga para leitura do sensor de luminosidade
-    """
-    global sensor_lumi0, sensor_lumi1
-    GPIO.setup(sensor_lumi0,GPIO.IN)
-    GPIO.setup(sensor_lumi1,GPIO.OUT)
-    GPIO.output(sensor_lumi1,0)
-    time.sleep(0.005)
+def percebe_luz(gpio):
+    sensor = LightSensor(gpio) 
+    
+    if sensor.value > 0.0:
+        return 0
+    return 1
 
-def carga():
-    """
-    controle de carga para leitura do sensor de luminosidade
-    """
-    global sensor_lumi0, sensor_lumi1
-    GPIO.setup(sensor_lumi1,GPIO.IN)
-    GPIO.setup(sensor_lumi0,GPIO.OUT)
-    contador = 0
-    GPIO.output(sensor_lumi0,1)
-    while GPIO.input(sensor_lumi1) == 0:
-        contador = contador + 1
-    time.sleep(3)
-    return contador
-
-
-def leitura_analogica():
-    """
-    controle de carga para leitura do sensor de luminosidade
-    """
-    descarga()
-    return carga()
-
-def inten_lum():
-    """
-    Define um limear para auta e baixa luminosidade
-    """
-    if leitura_analogica() > 100:
-        return 1
-    return 0
-
-
+def percebe_umidade(gpio):
+    sensor = LightSensor(gpio) 
+    
+    if sensor.value > 0.0:
+        return 0
+    return 1
 
 #Callback function on message receive
 def on_message(message): #client,userdata,
@@ -260,35 +122,38 @@ def publish(client):
     """
     publica dados coletados no cliente MQTT.
     """
-    global sensor_temp_umi, sensor_umi
+    global gpio_umi, gpio_lumi, gpio_temp_umi, gpio_irriga
     pub_topic_temp="greenhouse/temp"
     pub_topic_umi="greenhouse/umi"
     pub_topic_umi_ar="greenhouse/umi_ar"
     pub_topic_lumi="greenhouse/lumi"
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print ("checking temp and posting")
+    print ("checking temperatura and posting")
     #temperatura
-    data = AT.form_data(timestamp,read_tem_umi(sensor_temp_umi)[0],pub_topic_temp)
-    #punblish to topic
+    tmp_umi = read_tem_umi(gpio_temp_umi)
+    if tmp_umi is not None:
+        data = AT.form_data(timestamp,tmp_umi[0],pub_topic_temp)
+        #punblish to topic
     client.publish(pub_topic_temp, data)
-    print ("checking umi ar and posting")
-    #Umidade Ar
-    data = AT.form_data(timestamp, read_tem_umi(sensor_temp_umi)[1], pub_topic_umi_ar)
+    print ("\nchecking umidade do ar and posting")
+        #Umidade Ar
+    if tmp_umi is not None:
+        data = AT.form_data(timestamp,tmp_umi[1],pub_topic_temp)
         #punblish to topic
     client.publish(pub_topic_umi_ar, data)
     #Umidade
-    print ("checking umi and posting")
-    data = AT.form_data(timestamp,GPIO.input(sensor_umi),pub_topic_umi)
+    print ("\nchecking umidde and posting")
+    data = AT.form_data(timestamp,percebe_umidade(gpio_umi),pub_topic_umi)
     #punblish to topic
     client.publish(pub_topic_umi, data)
     #luminosidade
-    print ("checking luminosidade and posting")
-    data = AT.form_data(timestamp,inten_lum(),pub_topic_lumi)
+    print ("\nchecking luminosidade and posting")
+    data = AT.form_data(timestamp,percebe_luz(gpio_lumi),pub_topic_lumi)
     #punblish to topic
     client.publish(pub_topic_lumi, data)
 
-    print("Sleeping\n\n\n")
+    print("Sleeping\n\n")
     time.sleep(5)
 
     client.on_log = on_log
@@ -300,15 +165,17 @@ def run_monitor() :
     global sub_topic
     try:
         while True:
-            print("subscribing to topic on client" + sub_topic)
-            client.subscribe(sub_topic)
-            result = publish(client)
-            client.subscribe('testtopic/react')
+            #print("subscribing to topic on client" + sub_topic)
+            #client.subscribe(sub_topic)
+            publish(client)
             client.on_message = on_message
+            mensage = client.subscribe("topic/react")
+            
+            print(mensage)
             if AT.aciona_irrigacao(on_message):
-                GPIO.output(17, GPIO.HIGH)
+                GPIO.output(gpio_irriga, GPIO.HIGH)
                 time.sleep(5)
-                GPIO.output(17, GPIO.LOW)
+                GPIO.output(gpio_irriga, GPIO.LOW)
 
 
     except Exception as e:
