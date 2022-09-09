@@ -1,4 +1,4 @@
-FROM arm64v8/python3
+FROM arm64v8/python
 COPY /src /app
 RUN apt-get -qq update && python -m pip install --upgrade pip && apt-get install python3-pip && pip install paho-mqtt && pip install RPi.GPIO
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install Adafruit_DHT
