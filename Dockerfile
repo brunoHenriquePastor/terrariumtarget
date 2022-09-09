@@ -1,7 +1,9 @@
-FROM arm64v8/python
+FROM arm64v8/python3
 COPY /src /app
-RUN apt-get -qq update && python -m pip install --upgrade pip && pip install paho-mqtt && pip install RPi.GPIO
-RUN apt-get install build-essential && apt-get install python-dev && pip3 install Adafruit_Python_DHT
+RUN apt-get -qq update && python -m pip install --upgrade pip && apt-get install python3-pip && pip install paho-mqtt && pip install RPi.GPIO
+RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install Adafruit_DHT
 WORKDIR /app
 CMD ["python3", "terrarium_monitor.py"]
 #&& pip install --force-pi adafruit-circuitpython-dht
+#apt-get install -Y build-essential && apt-get install -Y python-dev && pip3 install Adafruit_Python_DHT
+
