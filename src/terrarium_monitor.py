@@ -10,10 +10,8 @@ import sys
 import json # used to parse config.json
 import time # timer functions
 from RPi import GPIO
-from pigpio_dht import DHT11
 from gpiozero import LightSensor
-#import Adafruit_DHT
-
+import Adafruit_DHT
 
 import paho.mqtt.client as mqtt
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
@@ -25,6 +23,7 @@ gpio_irriga = 17
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(gpio_irriga,  GPIO.OUT)
+GPIO.output(gpio_irriga, GPIO.LOW)
 
 gpio_lumi = 4
 gpio_umi  = 22
@@ -41,9 +40,7 @@ KeepAliveBroker = 60
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
-# base_dir = '/sys/bus/w1/devices/'
- # device_file_list = glob.glob(base_dir + '28*')[0] + '/w1_slave'
-#class Terrarium:
+
 #MQTT init
 print("Initalizing MQTT Client instance: " + client_id)
 client =  mqtt.Client(client_id) #define de topic "raspiberry"
@@ -60,12 +57,10 @@ def read_tem_umi(gpio):
     temperature = 0
     humidity = 0
     try:
-        sensor = DHT11(gpio)
 
-        result = sensor.read()
-        
-        temperature = result['temp_c']
-        humidity = result['humidity']
+        DHT_SENSOR = Adafruit_DHT.DHT11
+        DHT_PIN = 27
+        humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
 
         if humidity is not None and temperature is not None:
             print('Temp={0:0.1f}*  Humidity{1:0.1f}%'.format(temperature,humidity))
@@ -79,6 +74,7 @@ def read_tem_umi(gpio):
         #print "ERR_RANGE"
         print("ISSUE IN READING DHT11")
         #exit(0)
+
     time.sleep(5)
 
 
@@ -97,6 +93,7 @@ def percebe_umidade(gpio):
         return 0
     return 1
 
+
 #Callback function on message receive
 def on_message(message): #client,userdata,
     """
@@ -104,7 +101,7 @@ def on_message(message): #client,userdata,
     """
     print("message received",str(message.payload.decode("utf-8")))
     data = json.loads(str(message.payload.decode("utf-8","ignore")))
-    print(data)
+    #print(data)
     print("message topic=",message.topic)
     print("message qos=",message.qos)
     print("message retain flag=", message.retain)
@@ -170,8 +167,9 @@ def run_monitor() :
             publish(client)
             client.on_message = on_message
             mensage = client.subscribe("topic/react")
+            print("retorno mensage ",client.subscribe("topic/react"))
             
-            print(mensage)
+            print("retorno mensage ",mensage)
             if AT.aciona_irrigacao(on_message):
                 GPIO.output(gpio_irriga, GPIO.HIGH)
                 time.sleep(5)
