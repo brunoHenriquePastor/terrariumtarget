@@ -11,14 +11,8 @@ jobs:
   build_test_delivery:
 
     runs-on: ubuntu-20.04
-    env:      
-    #   DOCKER_REGISTRY: brunohenriquep180@gmail.com      
-      DOCKER_IMAGE: bhpdocker/terrarium_target      
-    #   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    #   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
-    #   DOCKER_TARGET_PLATFORM: linux/arm/v8
-    # container: 
-    #   image: arm64v8/python
+    env:           
+      DOCKER_IMAGE: bhpdocker/terrarium_target 
   
 
     steps:
