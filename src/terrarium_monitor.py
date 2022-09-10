@@ -13,8 +13,8 @@ from RPi import GPIO
 from gpiozero import LightSensor
 import Adafruit_DHT
 
-from adafruit_dht import DHT11
-import board
+# from adafruit_dht import DHT11
+# import board
 
 import paho.mqtt.client as mqtt
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
