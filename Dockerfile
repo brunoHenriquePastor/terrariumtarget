@@ -2,7 +2,7 @@ FROM arm64v8/python
 COPY /src /app
 RUN apt install python3 && pip install pip && pip install paho-mqtt && pip3 install gpiozero && pip install board
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install --upgrade adafruit-python-shell && pip3 install RPI.GPIO && pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0  
-
+RUN wget --no-check-certificate https://www.meinbergglobal.com/download/drivers/mbgtools-lx-4.2.6.tar.gz && tar xvzf mbgtools-lx-4.2.6.tar.gz && cd mbgtools-lx-4.2.6
 # RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
 # 	cd Adafruit_Python_DHT && \
 # 	python3 setup.py install --install-option="--force-pi"
