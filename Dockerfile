@@ -11,3 +11,5 @@ CMD ["python3", "terrarium_monitor.py"]
 
 #pip3 install adafruit-blinka
 #pip install Adafruit-DHT
+
+#pip3 install --upgrade adafruit-python-shell
