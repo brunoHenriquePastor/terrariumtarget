@@ -2,12 +2,15 @@ FROM arm64v8/python
 COPY /src /app
 RUN apt install python3 && pip install pip && pip install paho-mqtt && pip3 install gpiozero && pip install board
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install --upgrade adafruit-python-shell && pip3 install RPI.GPIO && pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0  
-RUN wget --no-check-certificate https://www.meinbergglobal.com/download/drivers/mbgtools-lx-4.2.6.tar.gz && tar xvzf mbgtools-lx-4.2.6.tar.gz && cd mbgtools-lx-4.2.6
+RUN mkdir /home/anholt/rpi2/debugfs && git clone https://github.com/raspberrypi/firmware raspberrypi-firmware && cp -R raspberrypi-firmware/boot/ /home/anholt/rpi2/
+WORKDIR /app
+CMD ["python3", "terrarium_monitor.py"]
+
+
+#RUN wget --no-check-certificate https://www.meinbergglobal.com/download/drivers/mbgtools-lx-4.2.6.tar.gz && tar xvzf mbgtools-lx-4.2.6.tar.gz && cd mbgtools-lx-4.2.6
 # RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
 # 	cd Adafruit_Python_DHT && \
 # 	python3 setup.py install --install-option="--force-pi"
-WORKDIR /app
-CMD ["python3", "terrarium_monitor.py"]
 
 #pip3 install adafruit-blinka
 #pip install Adafruit-DHT
