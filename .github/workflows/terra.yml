@@ -36,8 +36,7 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Use home assistant
-    - uses: "actions/checkout@v2"
-    - uses: "home-assistant/actions/hassfest@master"
+      uses: "home-assistant/actions/hassfest@master"
 
     - name: login to docker hub
       run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
