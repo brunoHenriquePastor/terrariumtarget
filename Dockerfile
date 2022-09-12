@@ -1,7 +1,5 @@
 FROM arm64v8/python
 
-RUN apk --no-cache add git build-base
-
 COPY /src /app
 RUN apt install python3 && pip install pip && pip install paho-mqtt && pip3 install gpiozero && pip install board
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install --upgrade adafruit-python-shell && pip3 install RPI.GPIO && pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0  
