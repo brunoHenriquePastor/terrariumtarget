@@ -2,18 +2,17 @@ FROM arm64v8/python
 
 COPY /src /app
 RUN apt install python3 && \
-    pip install pip && \
-    pip install paho-mqtt && \
+    pip3 install pip && \
+    pip3 install paho-mqtt && \
     pip3 install gpiozero && \
-    pip install board
+    pip3 install board
 RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --upgrade adafruit-python-shell && \
     pip3 install RPi.GPIO && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
     pip3 install adafruit-circuitpython-dht
 
-RUN apt install libgpiod-dev git build-essential && \
-    git clone https://github.com/adafruit/libgpiod_pulsein.git && \
+RUN git clone https://github.com/adafruit/libgpiod_pulsein.git && \
     cd libgpiod_pulsein/src && \ 
     make && \
     cp libgpiod_pulsein /usr/local/lib/python3.8/dist-packages/adafruit_blinka/microcontroller/bcm283x/pulseio/libgpiod_pulsein
