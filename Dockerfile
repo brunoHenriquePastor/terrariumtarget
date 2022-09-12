@@ -3,13 +3,6 @@ COPY /src /app
 RUN apt install python3 && pip install pip && pip install paho-mqtt && pip3 install gpiozero && pip install board
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install --upgrade adafruit-python-shell && pip3 install RPI.GPIO && pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0  
 #RUN apt-get install -y python3 python3-dev python3-venv python3-pip bluez libffi-dev libssl-dev libjpeg-dev zlib1g-dev autoconf build-essential libopenjp2-7 libtiff5 libturbojpeg0-dev tzdata
-RUN --name homeassistant \
-  --privileged \
-  --restart=unless-stopped \
-  -e TZ=MY_TIME_ZONE \
-  -v /PATH_TO_YOUR_CONFIG:/config \
-  --network=host \
-  ghcr.io/home-assistant/home-assistant:stable
 WORKDIR /app
 CMD ["python3", "terrarium_monitor.py"]
 
