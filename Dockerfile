@@ -1,25 +1,31 @@
 FROM arm64v8/python
 
 COPY /src /app
+
 RUN apt install python3 && \
     pip3 install pip && \
     pip3 install paho-mqtt && \
     pip3 install gpiozero && \
     pip3 install board
+
 RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --upgrade adafruit-python-shell && \
     pip3 install RPi.GPIO && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
     pip3 install adafruit-circuitpython-dht
 
-RUN git clone https://github.com/adafruit/libgpiod_pulsein.git && \
+RUN apt install gpiod && \
+    apt install libgpiod-dev git build-essential && \
+    git clone https://github.com/adafruit/libgpiod_pulsein.git && \
     cd libgpiod_pulsein/src && \ 
     make && \
     cp libgpiod_pulsein /usr/local/lib/python3.8/dist-packages/adafruit_blinka/microcontroller/bcm283x/pulseio/libgpiod_pulsein
 # RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
 # 	cd Adafruit_Python_DHT && \
 # 	python3 setup.py install --force-pi
+
 WORKDIR /app
+
 CMD ["python3", "terrarium_monitor.py"]
 
 
