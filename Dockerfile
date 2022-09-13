@@ -14,8 +14,8 @@ RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
     pip3 install adafruit-circuitpython-dht
 
-RUN apt install gpiod && \
-    apt install libgpiod-dev git build-essential && \
+RUN pip3 install gpiod && \
+    pip3 install libgpiod-dev git build-essential && \
     git clone https://github.com/adafruit/libgpiod_pulsein.git && \
     cd libgpiod_pulsein/src && \ 
     make && \
