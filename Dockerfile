@@ -15,7 +15,6 @@ RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install adafruit-circuitpython-dht
 
 RUN pip3 install gpiod && \
-    pip3 install libgpiod-dev git build-essential && \
     git clone https://github.com/adafruit/libgpiod_pulsein.git && \
     cd libgpiod_pulsein/src && \ 
     make && \
@@ -41,3 +40,6 @@ CMD ["python3", "terrarium_monitor.py"]
 #pip install Adafruit-DHT
 
  #apt install build-essential python-dev
+
+
+ #pip3 install libgpiod-dev git build-essential && \
