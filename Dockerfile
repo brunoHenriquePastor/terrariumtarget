@@ -2,7 +2,8 @@ FROM raspbian/stretch
 
 COPY /src /app
 
-RUN python3 -m pip install --upgrade pip setuptools wheel && \
+RUN apt install python3 && \
+    python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --upgrade adafruit-python-shell && \
     pip3 install RPi.GPIO && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
