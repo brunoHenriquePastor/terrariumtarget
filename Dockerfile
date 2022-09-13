@@ -2,7 +2,7 @@ FROM raspbian/stretch
 
 COPY /src /app
 
-RUN apt-get install -y build-essential python3.6 python3-pip python3.6-venv && \
+RUN apt update && apt install -y python3.6 python3-distutils python3-pip python3-apt && \
     pip3 install pip && \
     pip3 install paho-mqtt && \
     pip3 install gpiozero && \
