@@ -1,8 +1,8 @@
-FROM arm64v8/python
+FROM raspbian/stretch
 
 COPY /src /app
 
-RUN apt install python3 && \
+RUN apt install python3-pip && \
     pip3 install pip && \
     pip3 install paho-mqtt && \
     pip3 install gpiozero && \
@@ -14,12 +14,12 @@ RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
     pip3 install adafruit-circuitpython-dht
 
-RUN pip3 install gpiod && \
-    pip3 install libgpiod-dev git build-essential && \
-    git clone https://github.com/adafruit/libgpiod_pulsein.git && \
-    cd libgpiod_pulsein/src && \ 
-    make && \
-    cp libgpiod_pulsein /usr/local/lib/python3.8/dist-packages/adafruit_blinka/microcontroller/bcm283x/pulseio/libgpiod_pulsein
+# RUN pip3 install gpiod && \
+#     pip3 install libgpiod-dev git build-essential && \
+#     git clone https://github.com/adafruit/libgpiod_pulsein.git && \
+#     cd libgpiod_pulsein/src && \ 
+#     make && \
+#     cp libgpiod_pulsein /usr/local/lib/python3.8/dist-packages/adafruit_blinka/microcontroller/bcm283x/pulseio/libgpiod_pulsein
 # RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
 # 	cd Adafruit_Python_DHT && \
 # 	python3 setup.py install --force-pi
