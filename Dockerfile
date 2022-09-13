@@ -2,7 +2,7 @@ FROM raspbian/stretch
 
 COPY /src /app
 
-RUN apt install python3-pip && \
+RUN apt install python3 && \
     pip3 install pip && \
     pip3 install paho-mqtt && \
     pip3 install gpiozero && \
