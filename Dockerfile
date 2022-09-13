@@ -2,7 +2,7 @@ FROM raspbian/stretch
 
 COPY /src /app
 
-RUN apt install python3 && \
+RUN apt install python && \
     python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --upgrade adafruit-python-shell && \
     pip3 install RPi.GPIO && \
