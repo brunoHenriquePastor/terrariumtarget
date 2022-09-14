@@ -13,8 +13,8 @@ from RPi import GPIO
 from gpiozero import LightSensor
 import Adafruit_DHT
 
-# from adafruit_dht import DHT11
-# import board
+from adafruit_dht import DHT11
+import board
 
 import paho.mqtt.client as mqtt
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
@@ -58,10 +58,11 @@ def read_tem_umi(gpio):
 
         DHT_SENSOR = Adafruit_DHT.DHT11
         humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
-#
-#         dht_device = DHT11(board.D27, use_pulseio=False)
-#         temperature = dht_device.temperature
-#         humidity = dht_device.humidity  
+
+        if humidity == 0 and temperature == 0:
+            dht_device = DHT11(board.D27, use_pulseio=False)
+            temperature = dht_device.temperature
+            humidity = dht_device.humidity  
         
 
         if humidity is not None and temperature is not None:
