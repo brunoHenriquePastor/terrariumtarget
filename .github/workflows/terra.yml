@@ -51,8 +51,6 @@ jobs:
 
 
 
-
-
   test:
 
     runs-on: ubuntu-20.04
@@ -72,16 +70,6 @@ jobs:
     - name: Set up Docker Buildx
       id: buildx
       uses: docker/setup-buildx-action@v1
-
-    # - name: login to docker hub
-    #   run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-    # - name: build the image
-    #   run: |
-    #     docker buildx build \
-    #       --tag ${{ env.DOCKER_IMAGE }} \
-    #       --platform linux/arm64  .
-
 
     - name: Install dependencies
       run: |
@@ -130,7 +118,7 @@ jobs:
         context: .
         platforms: linux/arm64
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest #bhpdocker/terrarium_target:latest #, bhpdocker/terrarium_target:${{ github.run_number }}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest #bhpdocker/terrarium_target:latest 
         cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache
         cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache,mode=max
 
@@ -155,18 +143,6 @@ jobs:
   #     uses: docker/setup-qemu-action@v1
 
 
-    # delivery:
-
-  #   runs-on: ubuntu-18.04
-  #   needs: [test]
-  #   container: 
-  #      image: bhpdocker/terrarium_target:latest
-  #   # 
-  #   # defaults:
-  #   #   run:
-  #   #     working-directory: app
-  #   #     shell: bash
-    
 
 
 

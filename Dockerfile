@@ -6,7 +6,7 @@ RUN apt install python3 && \
     pip3 install pip && \
     python3 -m venv tutorial-env && \
     pip3 install paho-mqtt && \
-    pip3 install gpiozero && \
+    pip3 install gpiozero && apt-get install libgpiod2 && \
     pip3 install board
 
 RUN python3 -m pip install --upgrade pip setuptools wheel && \
