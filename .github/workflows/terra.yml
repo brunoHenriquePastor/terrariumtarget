@@ -56,6 +56,7 @@ jobs:
   test:
 
     runs-on: ubuntu-20.04
+    needs: [build]
     env:           
       DOCKER_IMAGE: env.DOCKER_IMAGE
   
@@ -103,6 +104,7 @@ jobs:
   delivery:
 
     runs-on: ubuntu-20.04
+    needs: [test]
     env:           
       DOCKER_IMAGE: env.DOCKER_IMAGE
   
