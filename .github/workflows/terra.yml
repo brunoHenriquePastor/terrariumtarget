@@ -41,10 +41,10 @@ jobs:
     - name: build the image
       run: |
         docker buildx build \
-          --tag ${{ env.DOCKER_IMAGE }} \ 
+          --tag ${{ env.DOCKER_IMAGE }} \
           --platform linux/arm64  .
 
-      #    --tag ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest doesn't work
+
 
 
 
