@@ -13,8 +13,7 @@ RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --upgrade adafruit-python-shell && \
     pip3 install RPi.GPIO && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
-    pip3 install adafruit-circuitpython-dht && \
-    pip3 install libjpeg8-dev libtiff4-dev libjasper-dev libpng12-dev
+    pip3 install adafruit-circuitpython-dht 
  
  RUN make /app
  
