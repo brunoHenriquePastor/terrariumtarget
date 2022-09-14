@@ -41,10 +41,10 @@ jobs:
     - name: build the image
       run: |
         docker buildx build \
-          --tag ${{ env.DOCKER_IMAGE }} \
+          --tag ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest
           --platform linux/arm64  .
 
-
+      #    --tag ${{ env.DOCKER_IMAGE }} \
 
 
 
@@ -130,8 +130,9 @@ jobs:
         context: .
         platforms: linux/arm64
         push: true
-        tags: bhpdocker/terrarium_target:latest #, bhpdocker/terrarium_target:${{ github.run_number }}
-    
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest #bhpdocker/terrarium_target:latest #, bhpdocker/terrarium_target:${{ github.run_number }}
+        cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:buildcache,mode=max
 
 
 
