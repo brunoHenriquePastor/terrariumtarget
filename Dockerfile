@@ -14,7 +14,6 @@ RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install RPi.GPIO && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
     pip3 install adafruit-circuitpython-dht && \
-    pip3 install adafruit-circuitpython-busdevice && \
     pip3 install build-essential python-dev
     # pip install CircuitPython && \
     # pip install Blinka
@@ -45,7 +44,11 @@ CMD ["python3", "terrarium_monitor.py"]
 #pip3 install adafruit-blinka
 #pip install Adafruit-DHT
 
- #apt install build-essential python-dev
+
+
+#pip3 install adafruit-circuitpython-busdevice && \
+
+
 
 
  #pip3 install libgpiod-dev git build-essential && \
