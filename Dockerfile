@@ -15,6 +15,9 @@ RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
     pip3 install adafruit-circuitpython-dht && \
     pip3 install libjpeg8-dev libtiff4-dev libjasper-dev libpng12-dev
+ 
+ RUN make /app
+ 
     # pip install CircuitPython && \
     # pip install Blinka
 
