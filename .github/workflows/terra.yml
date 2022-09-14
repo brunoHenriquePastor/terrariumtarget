@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  build_test_delivery:
+  build:
 
     runs-on: ubuntu-20.04
     env:           
@@ -45,6 +45,43 @@ jobs:
           --platform linux/arm64  .
 
 
+
+
+
+
+
+
+
+
+  test:
+
+    runs-on: ubuntu-20.04
+    env:           
+      DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }} 
+  
+
+    steps:
+    # Get the repository's code
+    - name: Checkout
+      uses: actions/checkout@v2
+      # https://github.com/docker/setup-qemu-action
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      # https://github.com/docker/setup-buildx-action
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+
+    # - name: login to docker hub
+    #   run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    # - name: build the image
+    #   run: |
+    #     docker buildx build \
+    #       --tag ${{ env.DOCKER_IMAGE }} \
+    #       --platform linux/arm64  .
+
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -57,6 +94,33 @@ jobs:
       run: |
         python -m doctest -v test/test_with_doctest.py 
 
+
+
+
+
+
+
+  delivery:
+
+    runs-on: ubuntu-20.04
+    env:           
+      DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }} 
+  
+
+    steps:
+    # Get the repository's code
+    - name: Checkout
+      uses: actions/checkout@v2
+      # https://github.com/docker/setup-qemu-action
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      # https://github.com/docker/setup-buildx-action
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: login to docker hub
+      run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Push to Docker Hub
       uses: docker/build-push-action@v2
