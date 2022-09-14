@@ -39,11 +39,6 @@ client_id="raspberry"
 PortaBroker = 1883
 KeepAliveBroker = 60
 
-
-# os.system('modprobe w1-gpio')
-# os.system('modprobe w1-therm')
-
-
 #MQTT init
 print("Initalizing MQTT Client instance: " + client_id)
 client =  mqtt.Client(client_id) #define de topic "raspiberry"
