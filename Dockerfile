@@ -6,15 +6,16 @@ RUN apt install python3 && \
     pip3 install pip && \
     python3 -m venv tutorial-env && \
     pip3 install paho-mqtt && \
-    pip3 install gpiozero && pip3 install libgpiod2 && \
+    pip3 install gpiozero && \
     pip3 install board
 
 RUN python3 -m pip install --upgrade pip setuptools wheel && \
     pip3 install --upgrade adafruit-python-shell && \
     pip3 install RPi.GPIO && \
     pip3 install --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
-    pip install adafruit-circuitpython-dht && \
-    pip3 install adafruit-circuitpython-busdevice
+    pip3 install adafruit-circuitpython-dht && \
+    pip3 install adafruit-circuitpython-busdevice && \
+    pip3 install libgpiod2
     # pip install CircuitPython && \
     # pip install Blinka
 
