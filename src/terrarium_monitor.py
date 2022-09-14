@@ -40,8 +40,8 @@ PortaBroker = 1883
 KeepAliveBroker = 60
 
 
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
+# os.system('modprobe w1-gpio')
+# os.system('modprobe w1-therm')
 
 
 #MQTT init
