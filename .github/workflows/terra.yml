@@ -41,10 +41,10 @@ jobs:
     - name: build the image
       run: |
         docker buildx build \
-          --tag ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest
+          --tag ${{ env.DOCKER_IMAGE }} \ 
           --platform linux/arm64  .
 
-      #    --tag ${{ env.DOCKER_IMAGE }} \
+      #    --tag ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest doesn't work
 
 
 
@@ -131,8 +131,8 @@ jobs:
         platforms: linux/arm64
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest #bhpdocker/terrarium_target:latest #, bhpdocker/terrarium_target:${{ github.run_number }}
-        cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:buildcache
-        cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:buildcache,mode=max
+        cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache,mode=max
 
 
 
