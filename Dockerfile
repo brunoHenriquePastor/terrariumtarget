@@ -5,7 +5,6 @@ COPY /src /app
 RUN apt install python3 && \
     python3 -m venv tutorial-env && \
     pip3 install pip &&  pip3 install \
-    build-essential \
     paho-mqtt \
     gpiozero \
     board
