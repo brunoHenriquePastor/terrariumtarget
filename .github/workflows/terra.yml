@@ -11,22 +11,22 @@ jobs:
   build:
 
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        arch: [armv6l, armv7l, aarch64]
-        include:
-        - arch: armv6l
-          cpu: arm1176
-          base_image: raspios_lite:latest
-          cpu_info: cpuinfo/raspberrypi_zero2_w_arm64
-        - arch: armv7l
-          cpu: cortex-a7
-          base_image: raspios_lite:latest
-          cpu_info: raspberrypi_3b
-        - arch: aarch64
-          cpu: cortex-a53
-          base_image: raspios_lite_arm64:latest
-          cpu_info: cpuinfo/raspberrypi_4b
+    # strategy:
+    #   matrix:
+    #     arch: [armv6l, armv7l, aarch64]
+    #     include:
+    #     - arch: armv6l
+    #       cpu: arm1176
+    #       base_image: raspios_lite:latest
+    #       cpu_info: cpuinfo/raspberrypi_zero2_w_arm64
+    #     - arch: armv7l
+    #       cpu: cortex-a7
+    #       base_image: raspios_lite:latest
+    #       cpu_info: raspberrypi_3b
+    #     - arch: aarch64
+    #       cpu: cortex-a53
+    #       base_image: raspios_lite_arm64:latest
+    #       cpu_info: cpuinfo/raspberrypi_4b
 
     env:           
       DOCKER_IMAGE: bhpdocker/terrarium_target 
@@ -72,7 +72,7 @@ jobs:
       run: |
         docker buildx build \
           --tag ${{ env.DOCKER_IMAGE }} \
-          --platform linux/arm64  .
+          --platform linux/arm64v8  .
 
 
 
