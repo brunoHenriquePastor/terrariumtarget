@@ -11,23 +11,6 @@ jobs:
   build:
 
     runs-on: ubuntu-20.04
-    # strategy:
-    #   matrix:
-    #     arch: [armv6l, armv7l, aarch64]
-    #     include:
-    #     - arch: armv6l
-    #       cpu: arm1176
-    #       base_image: raspios_lite:latest
-    #       cpu_info: cpuinfo/raspberrypi_zero2_w_arm64
-    #     - arch: armv7l
-    #       cpu: cortex-a7
-    #       base_image: raspios_lite:latest
-    #       cpu_info: raspberrypi_3b
-    #     - arch: aarch64
-    #       cpu: cortex-a53
-    #       base_image: raspios_lite_arm64:latest
-    #       cpu_info: cpuinfo/raspberrypi_4b
-
     env:           
       DOCKER_IMAGE: bhpdocker/terrarium_target 
   
@@ -167,7 +150,7 @@ jobs:
         context: .
         platforms: linux/arm64
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest #bhpdocker/terrarium_target:latest 
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest 
         cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache
         cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache,mode=max
 
