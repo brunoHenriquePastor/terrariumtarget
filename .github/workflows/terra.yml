@@ -72,7 +72,7 @@ jobs:
       run: |
         docker buildx build \
           --tag ${{ env.DOCKER_IMAGE }} \
-          --platform linux/arm64v8  .
+          --platform linux/arm64  .
 
 
 
