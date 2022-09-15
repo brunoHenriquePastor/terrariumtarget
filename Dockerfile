@@ -7,10 +7,10 @@ RUN apt install python3 && \
     pip3 install pip &&  pip3 install \
     paho-mqtt \
     gpiozero \
+    RPi.GPIO \
     board
 
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install \
-    RPi.GPIO \
     --install-option="--force-pi" Adafruit_DHT==1.4.0 \
     adafruit-circuitpython-dht \
     --upgrade adafruit-python-shell 
