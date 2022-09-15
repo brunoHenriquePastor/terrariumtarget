@@ -9,11 +9,11 @@ RUN apt install python3 && \
     gpiozero \
     board
 
-RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install \
-    --upgrade adafruit-python-shell \
+RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install -y \
     RPi.GPIO \
     --install-option="--force-pi" Adafruit_DHT==1.4.0 \
-    adafruit-circuitpython-dht 
+    adafruit-circuitpython-dht \
+    --upgrade adafruit-python-shell 
  
     # pip install CircuitPython && \
     # pip install Blinka
