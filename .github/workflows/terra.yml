@@ -45,15 +45,17 @@ jobs:
       with:
         base_image: dietpi:rpi_armv8_bullseye
         commands: |
-            commands to build image
+            docker buildx build \
+            --tag ${{ env.DOCKER_IMAGE }} \
+            --platform linux/arm64  .
 
 
 
-    - name: build the image
-      run: |
-        docker buildx build \
-          --tag ${{ env.DOCKER_IMAGE }} \
-          --platform linux/arm64  .
+    # - name: build the image
+    #   run: |
+    #     docker buildx build \
+    #       --tag ${{ env.DOCKER_IMAGE }} \
+    #       --platform linux/arm64  .
 
 
 
