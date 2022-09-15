@@ -147,16 +147,16 @@ jobs:
   
 
     steps:
-    # Get the repository's code
-    - name: Checkout
-      uses: actions/checkout@v2
-      # https://github.com/docker/setup-qemu-action
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
-      # https://github.com/docker/setup-buildx-action
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@v1
+    # # Get the repository's code
+    # - name: Checkout
+    #   uses: actions/checkout@v2
+    #   # https://github.com/docker/setup-qemu-action
+    # - name: Set up QEMU
+    #   uses: docker/setup-qemu-action@v1
+    #   # https://github.com/docker/setup-buildx-action
+    # - name: Set up Docker Buildx
+    #   id: buildx
+    #   uses: docker/setup-buildx-action@v1
 
     - name: login to docker hub
       run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -173,42 +173,6 @@ jobs:
 
 
 
-
-
-
-
-  # test:
-  #   runs-on: ubuntu-20.04
-
-  #   needs: [build]
-
-
-  #   steps:
-      
-  #   - name: Checkout
-  #     uses: actions/checkout@v2
-  #       # https://github.com/docker/setup-qemu-action
-  #   - name: Set up QEMU
-  #     uses: docker/setup-qemu-action@v1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     #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
 
-
-  #   strategy:
-  #     matrix:
-  #       python-version: ["3.8", "3.9", "3.10"]
   
