@@ -10,9 +10,9 @@ RUN apt install python3 && \
     board
 
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install \
-    --upgrade adafruit-python-shell && \
-    RPi.GPIO && \
-    --install-option="--force-pi" Adafruit_DHT==1.4.0 && \
+    --upgrade adafruit-python-shell \
+    RPi.GPIO \
+    --install-option="--force-pi" Adafruit_DHT==1.4.0 \
     adafruit-circuitpython-dht 
  
     # pip install CircuitPython && \
