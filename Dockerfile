@@ -41,7 +41,6 @@ CMD ["python3", "terrarium_monitor.py"]
 # 	cd Adafruit_Python_DHT && \
 # 	python3 setup.py install --install-option="--force-pi"
 
-#pip3 install adafruit-blinka
 #pip install Adafruit-DHT
 
 
