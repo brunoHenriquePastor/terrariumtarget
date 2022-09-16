@@ -56,8 +56,8 @@ def read_tem_umi(gpio):
     humidity = 0
     try:
 
-        DHT_SENSOR = Adafruit_DHT.DHT11
-        humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
+        # DHT_SENSOR = Adafruit_DHT.DHT11
+        # humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
 
         if humidity == 0 and temperature == 0:
             dht_device = DHT11(board.D27, use_pulseio=False)

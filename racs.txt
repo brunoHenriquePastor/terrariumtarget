@@ -1,0 +1,63 @@
+yaml:
+
+    #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
+
+  
+
+
+    # - name: Maximize build space
+    #   uses: easimon/maximize-build-space@master
+    #   with:
+    #     root-reserve-mb: 512
+    #     swap-size-mb: 1024
+    #     remove-dotnet: 'true'
+
+       # - uses: pguyot/arm-runner-action@v2
+    #   id: build_image
+    #   with:
+    #     base_image: dietpi:rpi_armv8_bullseye
+    #     commands: |
+    #         docker buildx build \
+    #         --tag ${{ env.DOCKER_IMAGE }} \
+    #         --platform linux/arm64  .
+
+
+Dockerfile:
+
+   #--upgrade adafruit-python-shell \
+    #Adafruit-Blinka
+ 
+    # pip install CircuitPython && \
+    # pip install Blinka
+
+# RUN pip3 install gpiod && \
+#     pip3 install libgpiod-dev git build-essential && \
+#     git clone https://github.com/adafruit/libgpiod_pulsein.git && \
+#     cd libgpiod_pulsein/src && \ 
+#     make && \
+#     cp libgpiod_pulsein /usr/local/lib/python3.8/dist-packages/adafruit_blinka/microcontroller/bcm283x/pulseio/libgpiod_pulsein
+# RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
+# 	cd Adafruit_Python_DHT && \
+# 	python3 setup.py install --force-pi
+
+
+
+
+#RUN mkdir /home/anholt/rpi2/debugfs && git clone https://github.com/raspberrypi/firmware raspberrypi-firmware && cp -R raspberrypi-firmware/boot/ /home/anholt/rpi2/
+
+
+#RUN wget --no-check-certificate https://www.meinbergglobal.com/download/drivers/mbgtools-lx-4.2.6.tar.gz && tar xvzf mbgtools-lx-4.2.6.tar.gz && cd mbgtools-lx-4.2.6
+# RUN git clone https://github.com/adafruit/Adafruit_Python_DHT.git && \
+# 	cd Adafruit_Python_DHT && \
+# 	python3 setup.py install --install-option="--force-pi"
+
+#pip install Adafruit-DHT
+
+
+
+#pip3 install adafruit-circuitpython-busdevice && \
+
+
+
+
+ #pip3 install libgpiod-dev git build-essential && \

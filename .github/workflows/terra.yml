@@ -72,8 +72,6 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [test]
 
-
-
     env:           
       DOCKER_IMAGE: env.DOCKER_IMAGE
   
@@ -102,26 +100,3 @@ jobs:
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:latest 
         cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache
         cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/terrarium_target:buildcache,mode=max
-
-
-
-    #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
-
-  
-
-
-    # - name: Maximize build space
-    #   uses: easimon/maximize-build-space@master
-    #   with:
-    #     root-reserve-mb: 512
-    #     swap-size-mb: 1024
-    #     remove-dotnet: 'true'
-
-       # - uses: pguyot/arm-runner-action@v2
-    #   id: build_image
-    #   with:
-    #     base_image: dietpi:rpi_armv8_bullseye
-    #     commands: |
-    #         docker buildx build \
-    #         --tag ${{ env.DOCKER_IMAGE }} \
-    #         --platform linux/arm64  .
