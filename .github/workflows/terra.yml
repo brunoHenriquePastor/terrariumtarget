@@ -43,9 +43,9 @@ jobs:
     needs: [build]
 
     steps:
-    # # Get the repository's code
-    # - name: Checkout
-    #   uses: actions/checkout@v2
+    # Get the repository's code
+    - name: Checkout
+      uses: actions/checkout@v2
       # https://github.com/docker/setup-qemu-action
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
