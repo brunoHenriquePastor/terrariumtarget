@@ -52,14 +52,22 @@ def read_tem_umi(gpio):
     """
     Leitura e tratamendo dos dados do sensor de temperatura e umidade
     """
-    temperature = 0
+    temperature = -273
     humidity = 0
     try:
 
-        # DHT_SENSOR = Adafruit_DHT.DHT11
-        # humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
 
-        if humidity == 0 and temperature == 0:
+        try:
+            DHT_SENSOR = Adafruit_DHT.DHT11
+            humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
+            
+        except Exception as e: 
+            print(repr(e))
+            print("ISSUE IN READING DHT11 FIRST LIBRARY\n")
+
+
+
+        if humidity == 0 and temperature == -273:
             dht_device = DHT11(board.D27, use_pulseio=False)
             temperature = dht_device.temperature
             humidity = dht_device.humidity  
@@ -143,13 +151,15 @@ def publish(client):
         #punblish to topic
     client.publish(pub_topic_umi_ar, data)
     #Umidade
-    print ("\nchecking umidde and posting")
-    data = AT.form_data(timestamp,percebe_umidade(gpio_umi),pub_topic_umi)
+    print ("\nchecking umidade and posting")
+    solo = percebe_umidade(gpio_umi)
+    data = AT.form_data(timestamp,solo,pub_topic_umi)
     #punblish to topic
     client.publish(pub_topic_umi, data)
     #luminosidade
     print ("\nchecking luminosidade and posting")
-    data = AT.form_data(timestamp,percebe_luz(gpio_lumi),pub_topic_lumi)
+    luz = percebe_luz(gpio_lumi)
+    data = AT.form_data(timestamp,luz,pub_topic_lumi)
     #punblish to topic
     client.publish(pub_topic_lumi, data)
 
@@ -157,6 +167,7 @@ def publish(client):
     time.sleep(5)
 
     client.on_log = on_log
+    return solo, tmp_umi, luz
 
 def run_monitor() :
     """
@@ -167,16 +178,33 @@ def run_monitor() :
         while True:
             #print("subscribing to topic on client" + sub_topic)
             #client.subscribe(sub_topic)
-            publish(client)
+            times = datetime.datetime.now().hour
+            ambiente = publish(client)
             client.on_message = on_message
             mensage = client.subscribe("topic/react")
-            print("retorno mensage ",client.subscribe("topic/react"))
+            #print("retorno mensage ",client.subscribe("topic/react"))
             
             print("retorno mensage ",mensage)
-            if AT.aciona_irrigacao(on_message):
-                GPIO.output(gpio_irriga, GPIO.HIGH)
-                time.sleep(5)
-                GPIO.output(gpio_irriga, GPIO.LOW)
+
+
+            #acionar irrigação remota
+            if AT.aciona_irrigacao(on_message) :
+                    GPIO.output(gpio_irriga, GPIO.HIGH)
+                    time.sleep(5)
+                    GPIO.output(gpio_irriga, GPIO.LOW)
+            
+
+            if ambiente is not None:
+                #irrigação com a terra seca e não estar a noite
+                if ambiente[0] == 0 and ambiente[2] == 1:
+                    GPIO.output(gpio_irriga, GPIO.HIGH)
+                    time.sleep(5)
+                    GPIO.output(gpio_irriga, GPIO.LOW)
+                #irrigar seco no inicio da manhã e no final da tarde
+                if ambiente[0] == 0 and (times == 6 or times == 18 ):
+                    GPIO.output(gpio_irriga, GPIO.HIGH)
+                    time.sleep(5)
+                    GPIO.output(gpio_irriga, GPIO.LOW)
 
 
     except Exception as e:

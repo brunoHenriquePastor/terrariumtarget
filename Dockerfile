@@ -14,7 +14,8 @@ RUN apt install python3 && \
 
 RUN python3 -m pip install --upgrade pip setuptools wheel && pip3 install \
     --install-option="--force-pi" Adafruit_DHT \
-    adafruit-circuitpython-dht 
+    adafruit-circuitpython-dht \
+    adafruit-python-shell
  
 
 WORKDIR /app
