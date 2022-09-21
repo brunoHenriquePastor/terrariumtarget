@@ -188,14 +188,14 @@ def run_monitor() :
 
 
             #acionar irrigação remota
-            if AT.aciona_irrigacao(on_message) :
-                    GPIO.output(gpio_irriga, GPIO.HIGH)
-                    time.sleep(1)
-                    GPIO.output(gpio_irriga, GPIO.LOW)
+            # if AT.aciona_irrigacao(on_message) :
+            #         GPIO.output(gpio_irriga, GPIO.HIGH)
+            #         time.sleep(1)
+            #         GPIO.output(gpio_irriga, GPIO.LOW)
             
 
             if ambiente is not None:
-                #irrigação com a terra seca e não estar a noite
+                #irrigação com a terra seca e  estar de Dia
                 if ambiente[0] == 0 and ambiente[2] == 1:
                     GPIO.output(gpio_irriga, GPIO.HIGH)
                     time.sleep(1)
