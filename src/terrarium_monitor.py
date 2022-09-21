@@ -182,16 +182,17 @@ def run_monitor() :
             ambiente = publish(client)
             client.on_message = on_message
             mensage = client.subscribe("topic/react")
+            GPIO.output(gpio_irriga, GPIO.LOW)
             #print("retorno mensage ",client.subscribe("topic/react"))
             
             print("retorno mensage ",mensage)
 
 
             #acionar irrigação remota
-            # if AT.aciona_irrigacao(on_message) :
-            #         GPIO.output(gpio_irriga, GPIO.HIGH)
-            #         time.sleep(1)
-            #         GPIO.output(gpio_irriga, GPIO.LOW)
+            if AT.aciona_irrigacao(on_message) :
+                    GPIO.output(gpio_irriga, GPIO.HIGH)
+                    time.sleep(1)
+                    GPIO.output(gpio_irriga, GPIO.LOW)
             
 
             if ambiente is not None:
