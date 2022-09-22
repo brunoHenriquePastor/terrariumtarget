@@ -22,9 +22,10 @@ import atomic_terrarium as AT
 
 GPIO.setwarnings(False)
 
-gpio_irriga = 6
-
 GPIO.setmode(GPIO.BCM)
+
+gpio_irriga = 6
+GPIO.output(gpio_irriga, GPIO.LOW)
 GPIO.setup(gpio_irriga,  GPIO.OUT)
 GPIO.output(gpio_irriga, GPIO.LOW)
 
@@ -106,7 +107,7 @@ def percebe_umidade(gpio):
 
 
 #Callback function on message receive
-def on_message(message): #client,userdata,
+def on_message(message): #client,userdata
     """
     sobrescreve a função a ser enviada que formata a mensagem a ser enviada
     """
@@ -169,6 +170,16 @@ def publish(client):
     client.on_log = on_log
     return solo, tmp_umi, luz
 
+def irriga(gpio_irriga):
+    try:
+        GPIO.output(gpio_irriga, GPIO.HIGH)
+        time.sleep(1)
+        GPIO.output(gpio_irriga, GPIO.LOW)
+        print("\nIrrigado\n")
+    except Exception as e:
+        GPIO.output(gpio_irriga, GPIO.LOW)
+
+
 def run_monitor() :
     """
     Principal função, executa funções da aplicação backend.
@@ -182,7 +193,6 @@ def run_monitor() :
             ambiente = publish(client)
             client.on_message = on_message
             mensage = client.subscribe("topic/react")
-            GPIO.output(gpio_irriga, GPIO.LOW)
             #print("retorno mensage ",client.subscribe("topic/react"))
             
             print("retorno mensage ",mensage)
@@ -190,20 +200,18 @@ def run_monitor() :
 
             #acionar irrigação remota
             if AT.aciona_irrigacao(on_message) :
-                    GPIO.output(gpio_irriga, GPIO.HIGH)
-                    time.sleep(1)
-                    print("\nIrrigado\n")
-                    GPIO.output(gpio_irriga, GPIO.LOW)
+                    irriga(gpio_irriga)
             
 
             if ambiente is not None:
                 #Analisando posição 0 (umidade do solo) do array, irrigação com a terra seca e 
                 # analisando posição 2 (luminosidade), haver presença de luz
                 if ambiente[0] == 0 and ambiente[2] == 1:
-                    GPIO.output(gpio_irriga, GPIO.HIGH)
-                    time.sleep(1)
-                    print("\nIrrigado\n")
-                    GPIO.output(gpio_irriga, GPIO.LOW)
+                    irriga(gpio_irriga)
+                #Analisando posição 0 (umidade do solo) do array, irrigação com a terra seca e 
+                # estar no inicio da manha ou no final da tarde
+                if ambiente[0] == 0 and (times == 6 or times == 18):
+                    irriga(gpio_irriga)
 
     except Exception as e:
         client.loop_stop()
