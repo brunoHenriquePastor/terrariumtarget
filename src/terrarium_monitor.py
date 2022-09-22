@@ -35,7 +35,7 @@ gpio_temp_umi = 27
 
         #MQTT Details
 broker_address="broker.emqx.io"   #"iot.eclipse.org"
-client_id="raspberry"
+client_id="raspberrygreen"
 PortaBroker = 1883
 KeepAliveBroker = 60
 
@@ -192,21 +192,18 @@ def run_monitor() :
             if AT.aciona_irrigacao(on_message) :
                     GPIO.output(gpio_irriga, GPIO.HIGH)
                     time.sleep(1)
+                    print("\nIrrigado\n")
                     GPIO.output(gpio_irriga, GPIO.LOW)
             
 
             if ambiente is not None:
-                #irrigação com a terra seca e  estar de Dia
+                #Analisando posição 0 (umidade do solo) do array, irrigação com a terra seca e 
+                # analisando posição 2 (luminosidade), haver presença de luz
                 if ambiente[0] == 0 and ambiente[2] == 1:
                     GPIO.output(gpio_irriga, GPIO.HIGH)
                     time.sleep(1)
+                    print("\nIrrigado\n")
                     GPIO.output(gpio_irriga, GPIO.LOW)
-                #irrigar seco no inicio da manhã e no final da tarde
-                if ambiente[0] == 0 and (times == 6 or times == 18 ):
-                    GPIO.output(gpio_irriga, GPIO.HIGH)
-                    time.sleep(1)
-                    GPIO.output(gpio_irriga, GPIO.LOW)
-
 
     except Exception as e:
         client.loop_stop()
