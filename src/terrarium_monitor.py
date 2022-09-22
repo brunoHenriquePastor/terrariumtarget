@@ -203,14 +203,14 @@ def run_monitor() :
                     irriga(gpio_irriga)
             
 
-            if ambiente is not None:
+            elif ambiente is not None:
                 #Analisando posição 0 (umidade do solo) do array, irrigação com a terra seca e 
                 # analisando posição 2 (luminosidade), haver presença de luz
                 if ambiente[0] == 0 and ambiente[2] == 1:
                     irriga(gpio_irriga)
                 #Analisando posição 0 (umidade do solo) do array, irrigação com a terra seca e 
                 # estar no inicio da manha ou no final da tarde
-                if ambiente[0] == 0 and (times == 6 or times == 18):
+                elif ambiente[0] == 0 and (times == 6 or times == 18):
                     irriga(gpio_irriga)
 
     except Exception as e:
