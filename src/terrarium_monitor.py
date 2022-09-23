@@ -22,9 +22,11 @@ import atomic_terrarium as AT
 
 GPIO.setwarnings(False)
 
+gpio_irriga = 6
+
 GPIO.setmode(GPIO.BCM)
 
-gpio_irriga = 6
+
 GPIO.output(gpio_irriga, GPIO.LOW)
 GPIO.setup(gpio_irriga,  GPIO.OUT)
 GPIO.output(gpio_irriga, GPIO.LOW)
@@ -172,12 +174,12 @@ def publish(client):
 
 def irriga(gpio_irriga):
     try:
-        GPIO.output(gpio_irriga, GPIO.HIGH)
-        time.sleep(1)
         GPIO.output(gpio_irriga, GPIO.LOW)
+        time.sleep(1)
+        GPIO.output(gpio_irriga, GPIO.HIGH)
         print("\nIrrigado\n")
     except Exception as e:
-        GPIO.output(gpio_irriga, GPIO.LOW)
+        GPIO.output(gpio_irriga, GPIO.HIGH)
 
 
 def run_monitor() :
@@ -203,7 +205,7 @@ def run_monitor() :
                     irriga(gpio_irriga)
             
 
-            elif ambiente is not None:
+            if ambiente is not None:
                 #Analisando posição 0 (umidade do solo) do array, irrigação com a terra seca e 
                 # analisando posição 2 (luminosidade), haver presença de luz
                 if ambiente[0] == 0 and ambiente[2] == 1:
