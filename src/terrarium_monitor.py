@@ -22,12 +22,10 @@ import atomic_terrarium as AT
 
 GPIO.setwarnings(False)
 
-gpio_irriga = 6
-
 GPIO.setmode(GPIO.BCM)
 
+gpio_irriga = 6
 
-GPIO.output(gpio_irriga, GPIO.LOW)
 GPIO.setup(gpio_irriga,  GPIO.OUT)
 GPIO.output(gpio_irriga, GPIO.LOW)
 
