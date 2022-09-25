@@ -13,8 +13,8 @@ from RPi import GPIO
 from gpiozero import LightSensor
 import Adafruit_DHT
 
-# from adafruit_dht import DHT11
-# import board
+from adafruit_dht import DHT11
+import board
 
 import paho.mqtt.client as mqtt
 sys.path.append(r'/home/brunohp/Documentos/development/terrariumtarget/src')
@@ -57,13 +57,13 @@ def read_tem_umi(gpio):
     try:
 
 
-        # try:
-        #     DHT_SENSOR = Adafruit_DHT.DHT11
-        #     humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
+        try:
+            DHT_SENSOR = Adafruit_DHT.DHT11
+            humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, gpio)
             
-        # except Exception as e: 
-        #     print(repr(e))
-        #     print("ISSUE IN READING DHT11 FIRST LIBRARY\n")
+        except Exception as e: 
+            print(repr(e))
+            print("ISSUE IN READING DHT11 FIRST LIBRARY\n")
 
 
 
@@ -167,6 +167,8 @@ def publish(client):
     time.sleep(5)
 
     client.on_log = on_log
+
+    client.publish("greenhouse/terrarium", tmp_umi[0], solo, luz, tmp_umi[1])
     return solo, tmp_umi, luz
 
 def irriga(gpio_irriga):
