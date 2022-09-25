@@ -167,7 +167,7 @@ def publish(client):
     time.sleep(5)
 
     client.on_log = on_log
-    if tmp_umi[0] != -273:
+    if tmp_umi[1] != 0:
         terrarium= json.dumps({'temperatures':tmp_umi[0], 'humidities':solo, 'lights':luz, 'humiditiesAr':tmp_umi[1]})  #json.dumps(str(
         client.publish("greenhouse/terrarium", )
     return solo, tmp_umi, luz
