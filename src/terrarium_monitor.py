@@ -27,6 +27,7 @@ GPIO.setmode(GPIO.BCM)
 gpio_irriga = 6
 
 GPIO.setup(gpio_irriga,  GPIO.OUT)
+GPIO.output(gpio_irriga, GPIO.HIGH)
 
 gpio_lumi = 4
 gpio_umi  = 22
