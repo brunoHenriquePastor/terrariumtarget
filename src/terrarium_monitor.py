@@ -141,25 +141,25 @@ def publish(client):
     #temperatura
     tmp_umi = read_tem_umi(gpio_temp_umi)
     if tmp_umi is not None:
-        data = AT.form_data(timestamp,tmp_umi[0],pub_topic_temp)
+        data = AT.form_data("temperatures",tmp_umi[0],pub_topic_temp)
         #punblish to topic
     client.publish(pub_topic_temp, data)
     print ("\nchecking umidade do ar and posting")
         #Umidade Ar
     if tmp_umi is not None:
-        data = AT.form_data(timestamp,tmp_umi[1],pub_topic_temp)
+        data = AT.form_data("humiditiesAr",tmp_umi[1],pub_topic_temp)
         #punblish to topic
     client.publish(pub_topic_umi_ar, data)
     #Umidade
     print ("\nchecking umidade and posting")
     solo = percebe_umidade(gpio_umi)
-    data = AT.form_data(timestamp,solo,pub_topic_umi)
+    data = AT.form_data("humidities",solo,pub_topic_umi)
     #punblish to topic
     client.publish(pub_topic_umi, data)
     #luminosidade
     print ("\nchecking luminosidade and posting")
     luz = percebe_luz(gpio_lumi)
-    data = AT.form_data(timestamp,luz,pub_topic_lumi)
+    data = AT.form_data("lights",luz,pub_topic_lumi)
     #punblish to topic
     client.publish(pub_topic_lumi, data)
 
