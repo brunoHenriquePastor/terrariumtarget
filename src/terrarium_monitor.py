@@ -169,7 +169,7 @@ def publish(client):
     client.on_log = on_log
     if tmp_umi[1] != 0:
         terrarium= json.dumps({'temperatures':tmp_umi[0], 'humidities':solo, 'lights':luz, 'humiditiesAr':tmp_umi[1]})  #json.dumps(str(
-        client.publish("greenhouse/terrarium", )
+        client.publish("greenhouse/terrarium", terrarium)
     return solo, tmp_umi, luz
 
 def irriga(gpio_irriga):
