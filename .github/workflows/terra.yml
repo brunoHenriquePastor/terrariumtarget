@@ -59,10 +59,10 @@ jobs:
     #     python -m pip install --upgrade pip
     #     pip install pylint
   
-    # - name: Analysing the code with pylint
+    # - name: Analyze code with pylint
     #   run: |
     #     pylint $(git ls-files '*.py')
-    - name: Analysing the code with doctest
+    - name: Analyze code with doctest
       run: |
         python -m doctest -v test/test_with_doctest.py 
 
