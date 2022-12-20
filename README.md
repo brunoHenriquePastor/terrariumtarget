@@ -261,6 +261,6 @@ Para êxito no processo de implantação e execução do container Docker, é ne
 
 
 
-# Acesso a a documentação completa do projeto:
+# Acesso a documentação completa do projeto:
 
-# https://www.monografias.ufop.br/handle/35400000/4794 
+## https://www.monografias.ufop.br/handle/35400000/4794 
